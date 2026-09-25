@@ -1,0 +1,80 @@
+<!-- Panel Enkripsi & Dekripsi Teks -->
+<section class="panel active" id="panel-teks">
+    <h1>Enkripsi &amp; Dekripsi Teks</h1>
+    <p class="lede">
+        Masukkan teks, pilih algoritma dan metode penurunan kunci, lalu
+        enkripsi. Hasilnya dapat ditampilkan dan disalin dalam format Base64
+        atau heksadesimal.
+    </p>
+
+    <div class="grid two">
+        <div class="card">
+            <h2>Parameter Enkripsi</h2>
+            <label
+                >Algoritma
+                <select id="t-algo">
+                    <option value="aes-gcm">AES-256-GCM (Authenticated)</option>
+                    <option value="chacha20">
+                        ChaCha20-Poly1305 (Authenticated)
+                    </option>
+                </select>
+            </label>
+            <label
+                >Key Derivation Function (KDF)
+                <select id="t-kdf">
+                    <option value="pbkdf2">
+                        PBKDF2-HMAC-SHA256 (600.000 iterasi)
+                    </option>
+                    <option value="scrypt">scrypt (N=32768, r=8, p=1)</option>
+                    <option value="argon2">Argon2id (t=3, m=64MiB, p=4)</option>
+                </select>
+            </label>
+            <label
+                >Format Tampilan
+                <select id="t-encoding">
+                    <option value="base64">Base64</option>
+                    <option value="hex">Heksadesimal</option>
+                </select>
+            </label>
+            <label
+                >Kata Sandi
+                <input
+                    type="password"
+                    id="t-password"
+                    placeholder="Masukkan kata sandi"
+                />
+            </label>
+        </div>
+
+        <div class="card">
+            <h2>Plainteks</h2>
+            <textarea
+                id="t-plaintext"
+                rows="7"
+                placeholder="Tulis pesan yang akan dienkripsi..."
+            ></textarea>
+            <div class="btn-row">
+                <button class="btn primary" id="t-encrypt-btn">
+                    Enkripsi &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Ciphertext (Binary Envelope CKV1)</h2>
+        <textarea
+            id="t-ciphertext"
+            rows="5"
+            placeholder="Hasil enkripsi akan muncul di sini, atau tempel envelope untuk didekripsi..."
+        ></textarea>
+        <div class="meta-row" id="t-meta"></div>
+        <div class="btn-row">
+            <button class="btn secondary" id="t-decrypt-btn">
+                &larr; Dekripsi
+            </button>
+            <button class="btn ghost" id="t-copy-btn">Salin Ciphertext</button>
+        </div>
+        <div id="t-result" class="result-box"></div>
+    </div>
+</section>

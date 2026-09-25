@@ -1,0 +1,59 @@
+{% extends "base.html" %} {% block title %}Cipherly Workspace &mdash; Modern
+Encryption Suite{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/app.css" />
+{% endblock %} {% block content %}
+<div class="shell">
+    <!-- Sidebar Navigation -->
+    <aside class="side">
+        <a href="/" class="brand-link" title="Kembali ke Beranda">
+            <span class="brand-mark">&#9679;</span>
+            <div>
+                <div class="brand-name">Cipherly</div>
+                <div class="brand-sub">Topik A &mdash; Enkripsi Modern</div>
+            </div>
+        </a>
+
+        <nav class="tabs" id="tabs">
+            <button class="tab active" data-tab="teks">
+                <span class="tab-indicator"></span>
+                Enkripsi Teks
+            </button>
+            <button class="tab" data-tab="berkas">
+                <span class="tab-indicator"></span>
+                Enkripsi Berkas
+            </button>
+            <button class="tab" data-tab="demo">
+                <span class="tab-indicator"></span>
+                Demo Skenario UTS
+            </button>
+            <button class="tab" data-tab="analisis">
+                <span class="tab-indicator"></span>
+                Analisis Cepat
+            </button>
+            <button class="tab" data-tab="hibrida">
+                <span class="tab-indicator"></span>
+                Hibrida (RSA + AES)
+            </button>
+        </nav>
+
+        <div class="side-footer">
+            <a href="/" class="home-nav-btn"> &larr; Beranda Landing Page </a>
+            <p>
+                <strong>AES-256-GCM</strong> &amp;
+                <strong>ChaCha20-Poly1305</strong>. KDF: PBKDF2 / scrypt /
+                Argon2id.
+            </p>
+        </div>
+    </aside>
+
+    <!-- Workspace Panels -->
+    <main class="content">
+        {% include "panels/panel_text.html" %} {% include
+        "panels/panel_file.html" %} {% include "panels/panel_demo.html" %} {%
+        include "panels/panel_analysis.html" %} {% include
+        "panels/panel_hybrid.html" %}
+    </main>
+</div>
+{% endblock %} {% block scripts %}
+<script type="module" src="/static/js/app.js"></script>
+{% endblock %}

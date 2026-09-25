@@ -26,7 +26,12 @@ _LAST_KEYPAIR = {"private_pem": None, "public_pem": None}
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("landing.html")
+
+
+@app.route("/app")
+def app_view():
+    return render_template("app.html")
 
 
 # ---------------------------------------------------------------------------
