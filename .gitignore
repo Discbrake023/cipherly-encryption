@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+*.krp
+laporan/*.png
+laporan/*.pdf
+.DS_Store
