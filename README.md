@@ -9,9 +9,8 @@ Informasi, Program Studi Informatika, Universitas Siliwangi.
 
 | Nama | NPM |
 |---|---|
-| _(isi nama anggota 1)_ | _(isi NPM)_ |
-| _(isi nama anggota 2)_ | _(isi NPM)_ |
-| _(isi nama anggota 3)_ | _(isi NPM)_ |
+| _(Raka Restu Saputra)_ | _(247006111172)_ |
+| _(Tazril Dwi Aprila)_ | _(247006111173)_ |
 
 ## Deskripsi
 
