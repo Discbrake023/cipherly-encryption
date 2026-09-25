@@ -7,3 +7,5 @@ venv/
 laporan/*.png
 laporan/*.pdf
 .DS_Store
+
+docs/

@@ -1,0 +1,54 @@
+<!-- Panel Demo Skenario Wajib UTS -->
+<section class="panel" id="panel-demo">
+    <h1>Skenario Demo Wajib (UTS)</h1>
+    <p class="lede">
+        Menjalankan 5 urutan pengujian otomatis: enkripsi berkas &rarr;
+        pratinjau cipherteks &rarr; dekripsi dengan kata sandi benar &rarr;
+        tolak kata sandi salah &rarr; tolak cipherteks yang diubah 1 byte
+        (tampered detection).
+    </p>
+
+    <div class="card">
+        <h2>Konfigurasi Skenario</h2>
+        <div class="grid two">
+            <div>
+                <label
+                    >Algoritma
+                    <select id="d-algo">
+                        <option value="aes-gcm">AES-256-GCM</option>
+                        <option value="chacha20">ChaCha20-Poly1305</option>
+                    </select>
+                </label>
+                <label
+                    >Key Derivation Function (KDF)
+                    <select id="d-kdf">
+                        <option value="pbkdf2">PBKDF2-HMAC-SHA256</option>
+                        <option value="scrypt">scrypt</option>
+                        <option value="argon2">Argon2id</option>
+                    </select>
+                </label>
+            </div>
+            <div>
+                <label
+                    >Kata Sandi Uji
+                    <input
+                        type="password"
+                        id="d-password"
+                        value="DemoUTS-2026!"
+                    />
+                </label>
+                <label
+                    >Pilih Berkas Uji (mis. PDF/TXT/PNG)
+                    <input type="file" id="d-file" />
+                </label>
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="btn primary" id="d-run-btn">
+                Jalankan 5 Skenario Uji &rarr;
+            </button>
+        </div>
+    </div>
+
+    <div id="d-output"></div>
+</section>

@@ -1,0 +1,224 @@
+{% extends "base.html" %} {% block title %}Cipherly &mdash; Modern Authenticated
+Encryption Suite{% endblock %} {% block styles %}
+<link rel="stylesheet" href="/static/css/landing.css" />
+{% endblock %} {% block content %}
+<div class="landing-wrapper">
+    <!-- Header / Navigation Bar -->
+    <header class="landing-header">
+        <a href="/" class="brand-link">
+            <span class="brand-mark">&#9679;</span>
+            <div>
+                <div class="brand-name">Cipherly</div>
+                <div class="brand-sub">Modern Cryptography Suite</div>
+            </div>
+        </a>
+
+        <nav class="landing-nav">
+            <a href="#fitur">Fitur Utama</a>
+            <a href="#arsitektur">Protokol Biner</a>
+            <a href="/app" class="btn primary">Buka Aplikasi &rarr;</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-badge">
+            <span class="badge primary"
+                >&#9679; Topik A &mdash; Kriptografi Modern &amp; Evaluasi
+                Empiris</span
+            >
+        </div>
+
+        <h1 class="hero-title">
+            Enkripsi Tingkat Militer, <br /><span class="gradient-text"
+                >Dibangun untuk Keamanan Maksimal.</span
+            >
+        </h1>
+
+        <p class="hero-desc">
+            Lindungi data sensitif dengan standar enkripsi terotentikasi (AEAD)
+            mutakhir: AES-256-GCM, ChaCha20-Poly1305, dan pertukaran kunci
+            Hibrida RSA-2048 dengan proteksi brute-force berbasis Argon2id &amp;
+            scrypt.
+        </p>
+
+        <div class="hero-actions">
+            <a href="/app" class="btn primary lg"
+                >Buka Cipherly Workspace &rarr;</a
+            >
+            <a href="#fitur" class="btn secondary lg">Jelajahi Fitur</a>
+        </div>
+    </section>
+
+    <!-- Feature Grid Section -->
+    <section class="section-container" id="fitur">
+        <div class="section-header">
+            <span class="badge primary">Fitur &amp; Kemampuan</span>
+            <h2 class="section-title">Fitur Kriptografi Terintegrasi</h2>
+            <p class="section-subtitle">
+                Implementasi standar industri dengan evaluasi performa dan
+                integritas data.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#128274;</div>
+                <div class="feature-title">Authenticated Encryption (AEAD)</div>
+                <div class="feature-body">
+                    Menggunakan <strong>AES-256-GCM</strong> dan
+                    <strong>ChaCha20-Poly1305</strong>. Menjamin kerahasiaan
+                    (*confidentiality*) sekaligus integritas (*tamper-proofing*)
+                    data dalam satu langkah.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#9889;</div>
+                <div class="feature-title">Memory-Hard KDF Protection</div>
+                <div class="feature-body">
+                    Proteksi kata sandi dari serangan GPU/ASIC cracking
+                    menggunakan <strong>Argon2id</strong>,
+                    <strong>scrypt</strong>, dan
+                    <strong>PBKDF2-HMAC-SHA256</strong> dengan 600.000 iterasi.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#128196;</div>
+                <div class="feature-title">Zero-Knowledge File Vault</div>
+                <div class="feature-body">
+                    Enkripsi dan dekripsi berkas biner apa pun (PDF, gambar,
+                    dokumen) langsung ke format terproteksi
+                    <code>.krp</code> tanpa penyimpanan permanen di server.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#128273;</div>
+                <div class="feature-title">Enkripsi Hibrida RSA-OAEP</div>
+                <div class="feature-body">
+                    Kombinasi efisiensi simetris (AES-GCM) dengan kemudahan
+                    asimetris (RSA-2048) untuk pertukaran pesan aman antar dua
+                    pihak.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#128202;</div>
+                <div class="feature-title">
+                    Avalanche Effect &amp; Shannon Entropy
+                </div>
+                <div class="feature-body">
+                    Pengujian langsung keacakan bit: memastikan perubahan 1 bit
+                    plaintext/kunci mengubah &asymp; 50% ciphertext dan
+                    menghasilkan entropi mendekati 8.0 bit/byte.
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#9989;</div>
+                <div class="feature-title">Pengujian Skenario UTS Otomatis</div>
+                <div class="feature-body">
+                    Pipeline otomatis untuk verifikasi 5 tahapan spesifikasi
+                    teknis termasuk deteksi kata sandi salah dan modifikasi
+                    ciphertext (tampering).
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Binary Envelope Protocol Section -->
+    <section class="section-container" id="arsitektur">
+        <div class="section-header">
+            <span class="badge primary">Standar Keamanan</span>
+            <h2 class="section-title">Format Binary Envelope (CKV1)</h2>
+            <p class="section-subtitle">
+                Struktur byte deterministik yang menjamin interoperabilitas dan
+                keamanan data.
+            </p>
+        </div>
+
+        <div class="spec-box">
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Offset</th>
+                        <th>Panjang</th>
+                        <th>Field</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>0x00 - 0x03</code></td>
+                        <td>4 Bytes</td>
+                        <td><code>MAGIC</code></td>
+                        <td>Magic identifier <code>CKV1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>0x04</code></td>
+                        <td>1 Byte</td>
+                        <td><code>ALGO_ID</code></td>
+                        <td>0x01 (AES-256-GCM) / 0x02 (ChaCha20-Poly1305)</td>
+                    </tr>
+                    <tr>
+                        <td><code>0x05</code></td>
+                        <td>1 Byte</td>
+                        <td><code>KDF_ID</code></td>
+                        <td>0x01 (PBKDF2) / 0x02 (scrypt) / 0x03 (Argon2id)</td>
+                    </tr>
+                    <tr>
+                        <td><code>0x06 - 0x15</code></td>
+                        <td>16 Bytes</td>
+                        <td><code>SALT</code></td>
+                        <td>Garam acak kriptografis (CSPRNG)</td>
+                    </tr>
+                    <tr>
+                        <td><code>0x16 - 0x21</code></td>
+                        <td>12 Bytes</td>
+                        <td><code>NONCE / IV</code></td>
+                        <td>Initialization Vector unik per enkripsi</td>
+                    </tr>
+                    <tr>
+                        <td><code>0x22 - 0x31</code></td>
+                        <td>16 Bytes</td>
+                        <td><code>AUTH TAG</code></td>
+                        <td>Tag integritas AEAD (GCM / Poly1305)</td>
+                    </tr>
+                    <tr>
+                        <td><code>0x32 - End</code></td>
+                        <td>Variabel</td>
+                        <td><code>PAYLOAD</code></td>
+                        <td>Ciphertext biner hasil enkripsi</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+        <h2 class="section-title">Siap Mencoba Kriptografi Modern?</h2>
+        <p class="lede" style="margin: 0 auto var(--space-5)">
+            Mulai enkripsi teks, berkas, atau jalankan simulasi analisis
+            keamanan langsung di browser Anda.
+        </p>
+        <a href="/app" class="btn primary lg"
+            >Luncurkan Cipherly Workspace &rarr;</a
+        >
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div>
+            &copy; 2026 Cipherly &mdash; Modern Authenticated Encryption Suite
+            (Topik A)
+        </div>
+        <div>
+            Built with Python Flask, cryptography, &amp; Green Deck Design
+            System
+        </div>
+    </footer>
+</div>
+{% endblock %}

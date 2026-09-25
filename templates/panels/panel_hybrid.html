@@ -1,0 +1,85 @@
+<!-- Panel Enkripsi Hibrida (RSA-OAEP + AEAD) -->
+<section class="panel" id="panel-hibrida">
+    <h1>Fitur Pengayaan: Enkripsi Hibrida (RSA-OAEP + AEAD)</h1>
+    <p class="lede">
+        Kunci sesi acak membungkus payload plaintext berkecepatan tinggi, dan
+        kunci sesi tersebut diamankan menggunakan kunci publik RSA-2048
+        penerima.
+    </p>
+
+    <div class="card">
+        <h2>Manajemen Pasangan Kunci RSA-2048</h2>
+        <div class="btn-row">
+            <button class="btn primary" id="h-genkeys-btn">
+                Bangkitkan Pasangan Kunci RSA-2048
+            </button>
+        </div>
+        <div class="grid two" style="margin-top: 1rem">
+            <label
+                >Kunci Publik (PEM)
+                <textarea
+                    id="h-public"
+                    rows="6"
+                    placeholder="Kunci publik akan muncul di sini..."
+                ></textarea>
+            </label>
+            <label
+                >Kunci Privat (PEM) &mdash;
+                <span style="color: var(--warning)">Demo Memori Sementara</span>
+                <textarea
+                    id="h-private"
+                    rows="6"
+                    placeholder="Kunci privat akan muncul di sini..."
+                ></textarea>
+            </label>
+        </div>
+        <p class="warning" id="h-warning"></p>
+    </div>
+
+    <div class="grid two">
+        <div class="card">
+            <h2>Enkripsi (Sisi Pengirim)</h2>
+            <label
+                >Pesan Rahasia
+                <textarea
+                    id="h-plaintext"
+                    rows="4"
+                    placeholder="Tulis pesan rahasia..."
+                ></textarea>
+            </label>
+            <div class="btn-row">
+                <button class="btn primary" id="h-encrypt-btn">
+                    Enkripsi Hibrida &rarr;
+                </button>
+            </div>
+            <label style="margin-top: 1rem"
+                >Envelope Hibrida (Base64)
+                <textarea
+                    id="h-envelope"
+                    rows="4"
+                    placeholder="Hasil envelope hibrida..."
+                ></textarea>
+            </label>
+        </div>
+
+        <div class="card">
+            <h2>Dekripsi (Sisi Penerima)</h2>
+            <p
+                style="
+                    margin-bottom: 1rem;
+                    font-size: 13px;
+                    color: var(--neutral);
+                "
+            >
+                Dekripsi menggunakan kunci privat yang tersimpan atau dimasukkan
+                di atas.
+            </p>
+            <div class="btn-row">
+                <button class="btn secondary" id="h-decrypt-btn">
+                    &larr; Dekripsi Hibrida
+                </button>
+            </div>
+            <div id="h-result" class="result-box"></div>
+        </div>
+    </div>
+</section>

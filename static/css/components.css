@@ -1,0 +1,280 @@
+/**
+ * Green Deck Design System - UI Components
+ */
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.btn:hover {
+  background-color: var(--surface-3);
+  border-color: var(--text-secondary);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn.primary {
+  background-color: var(--primary);
+  color: #000000;
+  border: none;
+}
+
+.btn.primary:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.04);
+}
+
+.btn.secondary {
+  background-color: transparent;
+  border: 1px solid var(--secondary);
+  color: var(--text-primary);
+}
+
+.btn.secondary:hover {
+  border-color: var(--text-primary);
+  transform: scale(1.02);
+}
+
+.btn.ghost {
+  background-color: transparent;
+  border: none;
+  color: var(--neutral);
+}
+
+.btn.ghost:hover {
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn.lg {
+  padding: 14px 32px;
+  font-size: 15px;
+}
+
+.btn-row {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background-color: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.card:hover {
+  background-color: #1c1c1c;
+}
+
+/* ---------- Form Controls ---------- */
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select,
+textarea {
+  width: 100%;
+  margin-top: var(--space-1);
+  background-color: var(--surface-2);
+  border: 1px solid transparent;
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--neutral);
+  opacity: 0.6;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  background-color: #242424;
+}
+
+input[type="file"] {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* ---------- Badges & Chips ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--surface-2);
+  color: var(--neutral);
+}
+
+.badge.primary {
+  background-color: var(--primary-glow);
+  color: var(--primary);
+  border: 1px solid rgba(29, 185, 84, 0.3);
+}
+
+.badge.success {
+  background-color: rgba(29, 185, 84, 0.15);
+  color: var(--success);
+}
+
+/* ---------- Result & Status Elements ---------- */
+.result-box {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--surface-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.result-box.ok {
+  color: var(--primary);
+  border-left: 3px solid var(--primary);
+}
+
+.result-box.err {
+  color: var(--error);
+  border-left: 3px solid var(--error);
+}
+
+.status {
+  margin-top: var(--space-3);
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+
+.status.ok { color: var(--primary); }
+.status.err { color: var(--error); }
+
+.warning {
+  color: var(--warning);
+  font-size: 12px;
+  margin-top: var(--space-3);
+}
+
+.meta-row {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* ---------- Execution Steps (Demo UTS) ---------- */
+.step {
+  border-left: 2px solid var(--border);
+  padding: var(--space-2) 0 var(--space-2) var(--space-4);
+  margin: var(--space-3) 0;
+  background-color: rgba(255, 255, 255, 0.01);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.step.pass {
+  border-left-color: var(--primary);
+}
+
+.step.fail {
+  border-left-color: var(--error);
+}
+
+.step-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.step-detail {
+  color: var(--neutral);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  margin-top: var(--space-1);
+  word-break: break-word;
+}
+
+/* ---------- Metrics Grid ---------- */
+.metric-card {
+  background-color: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  transition: border-color var(--transition-fast);
+}
+
+.metric-card:hover {
+  border-color: var(--surface-3);
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  color: var(--primary);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.metric-label {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: var(--space-2);
+}

@@ -1,0 +1,59 @@
+/**
+ * Green Deck Design System - Variables & Design Tokens
+ * As specified in docs/design.md
+ */
+
+:root {
+  /* Colors */
+  --primary: #1DB954;
+  --primary-hover: #1ED760;
+  --primary-glow: rgba(29, 185, 84, 0.15);
+  --secondary: #535353;
+  --neutral: #B3B3B3;
+
+  /* Surfaces & Elevation */
+  --bg: #121212;             /* Level 0: Void Black background */
+  --surface-1: #181818;      /* Level 1: Cards, sidebar, elevated containers */
+  --surface-2: #282828;      /* Level 2: Inputs, dropdowns, hover states */
+  --surface-3: #333333;      /* Level 3: Modals, elevated overlays */
+  
+  /* Text */
+  --text-primary: #FFFFFF;   /* Pure White for maximum contrast */
+  --text-secondary: #A7A7A7; /* Metadata, supporting text */
+  --text-muted: #727272;     /* Subdued text */
+
+  /* Borders & Dividers */
+  --border: #282828;         /* Subtle dividers on dark surfaces */
+  --border-focus: #FFFFFF;   /* Focused input border */
+  --border-active: #1DB954;
+
+  /* Status Colors */
+  --success: #1DB954;
+  --warning: #F59B23;
+  --error: #E22134;
+
+  /* Typography */
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Spacing Scale (8px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Border Radii */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+}

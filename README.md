@@ -1,4 +1,4 @@
-# CryptoVault &mdash; Aplikasi Enkripsi Modern (Topik A)
+# Cipherly &mdash; Aplikasi Enkripsi Modern (Topik A)
 
 Aplikasi web untuk mengenkripsi dan mendekripsi teks maupun berkas memakai
 algoritma kriptografi modern **AES-256-GCM** dan **ChaCha20-Poly1305**,

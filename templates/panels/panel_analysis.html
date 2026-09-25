@@ -1,0 +1,49 @@
+<!-- Panel Analisis Avalanche Effect & Entropi -->
+<section class="panel" id="panel-analisis">
+    <h1>Analisis Cepat: Avalanche Effect &amp; Entropi</h1>
+    <p class="lede">
+        Pengukuran interaktif sensitivitas perubahan bit (avalanche effect ideal
+        &asymp; 50%) dan derajat keacakan cipherteks (Shannon entropy mendekati
+        8.0 bit/byte).
+    </p>
+
+    <div class="card">
+        <h2>Parameter Uji Cepat</h2>
+        <div class="grid two">
+            <div>
+                <label
+                    >Teks Contoh
+                    <input
+                        type="text"
+                        id="a-plaintext"
+                        value="Contoh teks untuk uji avalanche effect dan entropi."
+                    />
+                </label>
+                <label
+                    >Kata Sandi
+                    <input
+                        type="password"
+                        id="a-password"
+                        value="analisis-cepat-2026"
+                    />
+                </label>
+            </div>
+            <div>
+                <label
+                    >Algoritma
+                    <select id="a-algo">
+                        <option value="aes-gcm">AES-256-GCM</option>
+                        <option value="chacha20">ChaCha20-Poly1305</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="btn primary" id="a-run-btn">
+                Hitung Metrik Keamanan
+            </button>
+        </div>
+    </div>
+
+    <div id="a-output" class="grid two"></div>
+</section>

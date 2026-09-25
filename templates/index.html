@@ -1,248 +1,403 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CryptoVault &mdash; Aplikasi Enkripsi Modern</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Cipherly &mdash; Aplikasi Enkripsi Modern</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/static/style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body>
+        <div class="shell">
+            <aside class="side">
+                <div class="brand">
+                    <span class="brand-mark">&#9679;</span>
+                    <div>
+                        <div class="brand-name">Cipherly</div>
+                        <div class="brand-sub">
+                            Topik A &mdash; Enkripsi Modern
+                        </div>
+                    </div>
+                </div>
 
-<div class="shell">
-  <aside class="side">
-    <div class="brand">
-      <span class="brand-mark">&#9679;</span>
-      <div>
-        <div class="brand-name">CryptoVault</div>
-        <div class="brand-sub">Topik A &mdash; Enkripsi Modern</div>
-      </div>
-    </div>
+                <nav class="tabs" id="tabs">
+                    <button class="tab active" data-tab="teks">
+                        Enkripsi Teks
+                    </button>
+                    <button class="tab" data-tab="berkas">
+                        Enkripsi Berkas
+                    </button>
+                    <button class="tab" data-tab="demo">
+                        Demo Skenario UTS
+                    </button>
+                    <button class="tab" data-tab="analisis">
+                        Analisis Cepat
+                    </button>
+                    <button class="tab" data-tab="hibrida">
+                        Hibrida (RSA + AES)
+                    </button>
+                </nav>
 
-    <nav class="tabs" id="tabs">
-      <button class="tab active" data-tab="teks">Enkripsi Teks</button>
-      <button class="tab" data-tab="berkas">Enkripsi Berkas</button>
-      <button class="tab" data-tab="demo">Demo Skenario UTS</button>
-      <button class="tab" data-tab="analisis">Analisis Cepat</button>
-      <button class="tab" data-tab="hibrida">Hibrida (RSA + AES)</button>
-    </nav>
+                <div class="side-note">
+                    <p>
+                        <strong>AES-256-GCM</strong> &amp;
+                        <strong>ChaCha20-Poly1305</strong> via pustaka
+                        <code>cryptography</code>. Kunci diturunkan dengan
+                        PBKDF2 / scrypt / Argon2id. Pengujian menyeluruh (waktu,
+                        avalanche, entropi, 1KB/1MB/10MB) ada di
+                        <code>testing/benchmark.py</code>.
+                    </p>
+                </div>
+            </aside>
 
-    <div class="side-note">
-      <p><strong>AES-256-GCM</strong> &amp; <strong>ChaCha20-Poly1305</strong> via pustaka <code>cryptography</code>.
-      Kunci diturunkan dengan PBKDF2 / scrypt / Argon2id. Pengujian menyeluruh (waktu, avalanche,
-      entropi, 1KB/1MB/10MB) ada di <code>testing/benchmark.py</code>.</p>
-    </div>
-  </aside>
+            <main class="content">
+                <!-- ================= TEKS ================= -->
+                <section class="panel active" id="panel-teks">
+                    <h1>Enkripsi &amp; Dekripsi Teks</h1>
+                    <p class="lede">
+                        Masukkan teks, pilih algoritma dan metode penurunan
+                        kunci, lalu enkripsi. Hasilnya dapat ditampilkan dan
+                        disalin dalam format Base64 atau heksadesimal.
+                    </p>
 
-  <main class="content">
+                    <div class="grid two">
+                        <div class="card">
+                            <h2>Parameter</h2>
+                            <label
+                                >Algoritma
+                                <select id="t-algo">
+                                    <option value="aes-gcm">AES-256-GCM</option>
+                                    <option value="chacha20">
+                                        ChaCha20-Poly1305
+                                    </option>
+                                </select>
+                            </label>
+                            <label
+                                >Key Derivation Function (KDF)
+                                <select id="t-kdf">
+                                    <option value="pbkdf2">
+                                        PBKDF2-HMAC-SHA256 (600.000 iterasi)
+                                    </option>
+                                    <option value="scrypt">
+                                        scrypt (N=32768, r=8, p=1)
+                                    </option>
+                                    <option value="argon2">
+                                        Argon2id (t=3, m=64MiB, p=4)
+                                    </option>
+                                </select>
+                            </label>
+                            <label
+                                >Format tampilan
+                                <select id="t-encoding">
+                                    <option value="base64">Base64</option>
+                                    <option value="hex">Heksadesimal</option>
+                                </select>
+                            </label>
+                            <label
+                                >Kata sandi
+                                <input
+                                    type="password"
+                                    id="t-password"
+                                    placeholder="Kata sandi enkripsi"
+                                />
+                            </label>
+                        </div>
 
-    <!-- ================= TEKS ================= -->
-    <section class="panel active" id="panel-teks">
-      <h1>Enkripsi &amp; Dekripsi Teks</h1>
-      <p class="lede">Masukkan teks, pilih algoritma dan metode penurunan kunci, lalu enkripsi. Hasilnya
-        dapat ditampilkan dan disalin dalam format Base64 atau heksadesimal.</p>
+                        <div class="card">
+                            <h2>Plainteks</h2>
+                            <textarea
+                                id="t-plaintext"
+                                rows="6"
+                                placeholder="Tulis pesan yang akan dienkripsi..."
+                            ></textarea>
+                            <div class="btn-row">
+                                <button class="btn primary" id="t-encrypt-btn">
+                                    Enkripsi &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-      <div class="grid two">
-        <div class="card">
-          <h2>Parameter</h2>
-          <label>Algoritma
-            <select id="t-algo">
-              <option value="aes-gcm">AES-256-GCM</option>
-              <option value="chacha20">ChaCha20-Poly1305</option>
-            </select>
-          </label>
-          <label>Key Derivation Function (KDF)
-            <select id="t-kdf">
-              <option value="pbkdf2">PBKDF2-HMAC-SHA256 (600.000 iterasi)</option>
-              <option value="scrypt">scrypt (N=32768, r=8, p=1)</option>
-              <option value="argon2">Argon2id (t=3, m=64MiB, p=4)</option>
-            </select>
-          </label>
-          <label>Format tampilan
-            <select id="t-encoding">
-              <option value="base64">Base64</option>
-              <option value="hex">Heksadesimal</option>
-            </select>
-          </label>
-          <label>Kata sandi
-            <input type="password" id="t-password" placeholder="Kata sandi enkripsi">
-          </label>
+                    <div class="card">
+                        <h2>Ciphertext (envelope)</h2>
+                        <textarea
+                            id="t-ciphertext"
+                            rows="5"
+                            placeholder="Hasil enkripsi akan muncul di sini, atau tempel envelope untuk didekripsi..."
+                        ></textarea>
+                        <div class="meta-row" id="t-meta"></div>
+                        <div class="btn-row">
+                            <button class="btn" id="t-decrypt-btn">
+                                &larr; Dekripsi
+                            </button>
+                            <button class="btn ghost" id="t-copy-btn">
+                                Salin
+                            </button>
+                        </div>
+                        <div id="t-result" class="result-box"></div>
+                    </div>
+                </section>
+
+                <!-- ================= BERKAS ================= -->
+                <section class="panel" id="panel-berkas">
+                    <h1>Enkripsi &amp; Dekripsi Berkas</h1>
+                    <p class="lede">
+                        Unggah berkas apa pun (gambar, PDF, dokumen). Berkas
+                        hasil enkripsi memakai ekstensi <code>.krp</code> dan
+                        menyimpan salt/nonce/algoritma sehingga dapat didekripsi
+                        ulang.
+                    </p>
+
+                    <div class="grid two">
+                        <div class="card">
+                            <h2>Enkripsi</h2>
+                            <label
+                                >Algoritma
+                                <select id="f-algo">
+                                    <option value="aes-gcm">AES-256-GCM</option>
+                                    <option value="chacha20">
+                                        ChaCha20-Poly1305
+                                    </option>
+                                </select>
+                            </label>
+                            <label
+                                >KDF
+                                <select id="f-kdf">
+                                    <option value="pbkdf2">
+                                        PBKDF2-HMAC-SHA256
+                                    </option>
+                                    <option value="scrypt">scrypt</option>
+                                    <option value="argon2">Argon2id</option>
+                                </select>
+                            </label>
+                            <label
+                                >Kata sandi
+                                <input
+                                    type="password"
+                                    id="f-password-enc"
+                                    placeholder="Kata sandi enkripsi"
+                                />
+                            </label>
+                            <label
+                                >Berkas
+                                <input type="file" id="f-file-enc" />
+                            </label>
+                            <div class="btn-row">
+                                <button class="btn primary" id="f-encrypt-btn">
+                                    Enkripsi &amp; Unduh
+                                </button>
+                            </div>
+                            <div id="f-enc-status" class="status"></div>
+                        </div>
+
+                        <div class="card">
+                            <h2>Dekripsi</h2>
+                            <label
+                                >Kata sandi
+                                <input
+                                    type="password"
+                                    id="f-password-dec"
+                                    placeholder="Kata sandi dekripsi"
+                                />
+                            </label>
+                            <label
+                                >Berkas .krp
+                                <input type="file" id="f-file-dec" />
+                            </label>
+                            <div class="btn-row">
+                                <button class="btn" id="f-decrypt-btn">
+                                    Dekripsi &amp; Unduh
+                                </button>
+                            </div>
+                            <div id="f-dec-status" class="status"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= DEMO UTS ================= -->
+                <section class="panel" id="panel-demo">
+                    <h1>Skenario Demo Wajib (UTS)</h1>
+                    <p class="lede">
+                        Menjalankan urutan yang diminta spesifikasi tugas:
+                        enkripsi satu berkas &rarr; tampilkan cipherteks &rarr;
+                        dekripsi dengan kata sandi benar &rarr; tolak kata sandi
+                        salah &rarr; tolak cipherteks yang diubah satu byte.
+                    </p>
+
+                    <div class="card">
+                        <label
+                            >Algoritma
+                            <select id="d-algo">
+                                <option value="aes-gcm">AES-256-GCM</option>
+                                <option value="chacha20">
+                                    ChaCha20-Poly1305
+                                </option>
+                            </select>
+                        </label>
+                        <label
+                            >KDF
+                            <select id="d-kdf">
+                                <option value="pbkdf2">
+                                    PBKDF2-HMAC-SHA256
+                                </option>
+                                <option value="scrypt">scrypt</option>
+                                <option value="argon2">Argon2id</option>
+                            </select>
+                        </label>
+                        <label
+                            >Kata sandi
+                            <input
+                                type="password"
+                                id="d-password"
+                                placeholder="Kata sandi untuk demo"
+                                value="DemoUTS-2026!"
+                            />
+                        </label>
+                        <label
+                            >Berkas (mis. PDF)
+                            <input type="file" id="d-file" />
+                        </label>
+                        <div class="btn-row">
+                            <button class="btn primary" id="d-run-btn">
+                                Jalankan Skenario Demo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="d-output"></div>
+                </section>
+
+                <!-- ================= ANALISIS ================= -->
+                <section class="panel" id="panel-analisis">
+                    <h1>Analisis Cepat: Avalanche Effect &amp; Entropi</h1>
+                    <p class="lede">
+                        Panel ini untuk pratinjau interaktif. Untuk pengujian
+                        lengkap (1KB/1MB/10MB, histogram penuh, 10+ berkas uji,
+                        dan ekspor XLSX) jalankan
+                        <code>python -m testing.benchmark</code> dari terminal
+                        &mdash; hasilnya masuk ke folder <code>laporan/</code>.
+                    </p>
+
+                    <div class="card">
+                        <label
+                            >Teks contoh
+                            <input
+                                type="text"
+                                id="a-plaintext"
+                                value="Contoh teks untuk uji avalanche effect dan entropi."
+                            />
+                        </label>
+                        <label
+                            >Kata sandi
+                            <input
+                                type="password"
+                                id="a-password"
+                                value="analisis-cepat-2026"
+                            />
+                        </label>
+                        <label
+                            >Algoritma
+                            <select id="a-algo">
+                                <option value="aes-gcm">AES-256-GCM</option>
+                                <option value="chacha20">
+                                    ChaCha20-Poly1305
+                                </option>
+                            </select>
+                        </label>
+                        <div class="btn-row">
+                            <button class="btn primary" id="a-run-btn">
+                                Analisis
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="a-output" class="grid two"></div>
+                </section>
+
+                <!-- ================= HIBRIDA ================= -->
+                <section class="panel" id="panel-hibrida">
+                    <h1>Fitur Pengayaan: Enkripsi Hibrida (RSA-OAEP + AEAD)</h1>
+                    <p class="lede">
+                        Kunci sesi AES/ChaCha20 dibangkitkan acak, membungkus
+                        data, lalu kunci sesi itu sendiri dibungkus dengan
+                        RSA-OAEP memakai kunci publik penerima.
+                    </p>
+
+                    <div class="card">
+                        <div class="btn-row">
+                            <button class="btn primary" id="h-genkeys-btn">
+                                Bangkitkan Pasangan Kunci RSA-2048
+                            </button>
+                        </div>
+                        <div class="grid two" style="margin-top: 1rem">
+                            <label
+                                >Kunci Publik (PEM)
+                                <textarea
+                                    id="h-public"
+                                    rows="6"
+                                    placeholder="Kunci publik akan muncul di sini..."
+                                ></textarea>
+                            </label>
+                            <label
+                                >Kunci Privat (PEM) &mdash; DEMO SAJA
+                                <textarea
+                                    id="h-private"
+                                    rows="6"
+                                    placeholder="Kunci privat akan muncul di sini..."
+                                ></textarea>
+                            </label>
+                        </div>
+                        <p class="warning" id="h-warning"></p>
+                    </div>
+
+                    <div class="grid two">
+                        <div class="card">
+                            <h2>
+                                Enkripsi (pihak pengirim, hanya punya kunci
+                                publik)
+                            </h2>
+                            <textarea
+                                id="h-plaintext"
+                                rows="4"
+                                placeholder="Pesan rahasia..."
+                            ></textarea>
+                            <div class="btn-row">
+                                <button class="btn" id="h-encrypt-btn">
+                                    Enkripsi Hibrida
+                                </button>
+                            </div>
+                            <textarea
+                                id="h-envelope"
+                                rows="4"
+                                placeholder="Envelope hasil enkripsi hibrida (base64)..."
+                            ></textarea>
+                        </div>
+                        <div class="card">
+                            <h2>
+                                Dekripsi (pihak penerima, punya kunci privat)
+                            </h2>
+                            <div class="btn-row">
+                                <button class="btn" id="h-decrypt-btn">
+                                    Dekripsi Hibrida
+                                </button>
+                            </div>
+                            <div id="h-result" class="result-box"></div>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
 
-        <div class="card">
-          <h2>Plainteks</h2>
-          <textarea id="t-plaintext" rows="6" placeholder="Tulis pesan yang akan dienkripsi..."></textarea>
-          <div class="btn-row">
-            <button class="btn primary" id="t-encrypt-btn">Enkripsi &rarr;</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Ciphertext (envelope)</h2>
-        <textarea id="t-ciphertext" rows="5" placeholder="Hasil enkripsi akan muncul di sini, atau tempel envelope untuk didekripsi..."></textarea>
-        <div class="meta-row" id="t-meta"></div>
-        <div class="btn-row">
-          <button class="btn" id="t-decrypt-btn">&larr; Dekripsi</button>
-          <button class="btn ghost" id="t-copy-btn">Salin</button>
-        </div>
-        <div id="t-result" class="result-box"></div>
-      </div>
-    </section>
-
-    <!-- ================= BERKAS ================= -->
-    <section class="panel" id="panel-berkas">
-      <h1>Enkripsi &amp; Dekripsi Berkas</h1>
-      <p class="lede">Unggah berkas apa pun (gambar, PDF, dokumen). Berkas hasil enkripsi memakai
-        ekstensi <code>.krp</code> dan menyimpan salt/nonce/algoritma sehingga dapat didekripsi ulang.</p>
-
-      <div class="grid two">
-        <div class="card">
-          <h2>Enkripsi</h2>
-          <label>Algoritma
-            <select id="f-algo">
-              <option value="aes-gcm">AES-256-GCM</option>
-              <option value="chacha20">ChaCha20-Poly1305</option>
-            </select>
-          </label>
-          <label>KDF
-            <select id="f-kdf">
-              <option value="pbkdf2">PBKDF2-HMAC-SHA256</option>
-              <option value="scrypt">scrypt</option>
-              <option value="argon2">Argon2id</option>
-            </select>
-          </label>
-          <label>Kata sandi
-            <input type="password" id="f-password-enc" placeholder="Kata sandi enkripsi">
-          </label>
-          <label>Berkas
-            <input type="file" id="f-file-enc">
-          </label>
-          <div class="btn-row">
-            <button class="btn primary" id="f-encrypt-btn">Enkripsi &amp; Unduh</button>
-          </div>
-          <div id="f-enc-status" class="status"></div>
-        </div>
-
-        <div class="card">
-          <h2>Dekripsi</h2>
-          <label>Kata sandi
-            <input type="password" id="f-password-dec" placeholder="Kata sandi dekripsi">
-          </label>
-          <label>Berkas .krp
-            <input type="file" id="f-file-dec">
-          </label>
-          <div class="btn-row">
-            <button class="btn" id="f-decrypt-btn">Dekripsi &amp; Unduh</button>
-          </div>
-          <div id="f-dec-status" class="status"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= DEMO UTS ================= -->
-    <section class="panel" id="panel-demo">
-      <h1>Skenario Demo Wajib (UTS)</h1>
-      <p class="lede">Menjalankan urutan yang diminta spesifikasi tugas: enkripsi satu berkas &rarr;
-        tampilkan cipherteks &rarr; dekripsi dengan kata sandi benar &rarr; tolak kata sandi salah &rarr;
-        tolak cipherteks yang diubah satu byte.</p>
-
-      <div class="card">
-        <label>Algoritma
-          <select id="d-algo">
-            <option value="aes-gcm">AES-256-GCM</option>
-            <option value="chacha20">ChaCha20-Poly1305</option>
-          </select>
-        </label>
-        <label>KDF
-          <select id="d-kdf">
-            <option value="pbkdf2">PBKDF2-HMAC-SHA256</option>
-            <option value="scrypt">scrypt</option>
-            <option value="argon2">Argon2id</option>
-          </select>
-        </label>
-        <label>Kata sandi
-          <input type="password" id="d-password" placeholder="Kata sandi untuk demo" value="DemoUTS-2026!">
-        </label>
-        <label>Berkas (mis. PDF)
-          <input type="file" id="d-file">
-        </label>
-        <div class="btn-row">
-          <button class="btn primary" id="d-run-btn">Jalankan Skenario Demo</button>
-        </div>
-      </div>
-
-      <div id="d-output"></div>
-    </section>
-
-    <!-- ================= ANALISIS ================= -->
-    <section class="panel" id="panel-analisis">
-      <h1>Analisis Cepat: Avalanche Effect &amp; Entropi</h1>
-      <p class="lede">Panel ini untuk pratinjau interaktif. Untuk pengujian lengkap (1KB/1MB/10MB,
-        histogram penuh, 10+ berkas uji, dan ekspor XLSX) jalankan <code>python -m testing.benchmark</code>
-        dari terminal &mdash; hasilnya masuk ke folder <code>laporan/</code>.</p>
-
-      <div class="card">
-        <label>Teks contoh
-          <input type="text" id="a-plaintext" value="Contoh teks untuk uji avalanche effect dan entropi.">
-        </label>
-        <label>Kata sandi
-          <input type="password" id="a-password" value="analisis-cepat-2026">
-        </label>
-        <label>Algoritma
-          <select id="a-algo">
-            <option value="aes-gcm">AES-256-GCM</option>
-            <option value="chacha20">ChaCha20-Poly1305</option>
-          </select>
-        </label>
-        <div class="btn-row">
-          <button class="btn primary" id="a-run-btn">Analisis</button>
-        </div>
-      </div>
-
-      <div id="a-output" class="grid two"></div>
-    </section>
-
-    <!-- ================= HIBRIDA ================= -->
-    <section class="panel" id="panel-hibrida">
-      <h1>Fitur Pengayaan: Enkripsi Hibrida (RSA-OAEP + AEAD)</h1>
-      <p class="lede">Kunci sesi AES/ChaCha20 dibangkitkan acak, membungkus data, lalu kunci sesi itu
-        sendiri dibungkus dengan RSA-OAEP memakai kunci publik penerima.</p>
-
-      <div class="card">
-        <div class="btn-row">
-          <button class="btn primary" id="h-genkeys-btn">Bangkitkan Pasangan Kunci RSA-2048</button>
-        </div>
-        <div class="grid two" style="margin-top:1rem">
-          <label>Kunci Publik (PEM)
-            <textarea id="h-public" rows="6" placeholder="Kunci publik akan muncul di sini..."></textarea>
-          </label>
-          <label>Kunci Privat (PEM) &mdash; DEMO SAJA
-            <textarea id="h-private" rows="6" placeholder="Kunci privat akan muncul di sini..."></textarea>
-          </label>
-        </div>
-        <p class="warning" id="h-warning"></p>
-      </div>
-
-      <div class="grid two">
-        <div class="card">
-          <h2>Enkripsi (pihak pengirim, hanya punya kunci publik)</h2>
-          <textarea id="h-plaintext" rows="4" placeholder="Pesan rahasia..."></textarea>
-          <div class="btn-row"><button class="btn" id="h-encrypt-btn">Enkripsi Hibrida</button></div>
-          <textarea id="h-envelope" rows="4" placeholder="Envelope hasil enkripsi hibrida (base64)..."></textarea>
-        </div>
-        <div class="card">
-          <h2>Dekripsi (pihak penerima, punya kunci privat)</h2>
-          <div class="btn-row"><button class="btn" id="h-decrypt-btn">Dekripsi Hibrida</button></div>
-          <div id="h-result" class="result-box"></div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<script src="/static/script.js"></script>
-</body>
+        <script src="/static/script.js"></script>
+    </body>
 </html>
