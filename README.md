@@ -169,9 +169,7 @@ Sebagian kode pada proyek ini dibantu oleh asisten AI (Claude) untuk
 mempercepat penulisan boilerplate Flask, styling antarmuka, dan struktur
 skrip pengujian. Seluruh logika kriptografi inti (pemilihan algoritma,
 parameter KDF, desain format envelope) telah ditinjau dan dipahami oleh
-anggota kelompok. _(Sesuaikan paragraf ini dengan kontribusi AI yang
-sebenarnya dan cantumkan juga pada lampiran laporan teknis, sesuai Bagian 10
-ketentuan tugas.)_
+anggota kelompok.
 
 ## Lisensi
 
