@@ -1,11 +1,11 @@
 __pycache__/
-*.pyc
 .pytest_cache/
-venv/
 .venv/
-*.krp
+venv/
+testing/
+tests/
 laporan/*.png
 laporan/*.pdf
+sample_data/
+*.krp
 .DS_Store
-
-skills/

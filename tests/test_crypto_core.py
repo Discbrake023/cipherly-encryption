@@ -7,9 +7,6 @@ Memenuhi ketentuan "minimal lima unit test untuk fungsi inti".
 """
 
 import os
-import sys
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 import crypto_core as ck
