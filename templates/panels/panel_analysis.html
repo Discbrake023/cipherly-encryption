@@ -1,14 +1,12 @@
 <!-- Panel Analisis Avalanche Effect & Entropi -->
 <section class="panel" id="panel-analisis">
-    <h1>Analisis Cepat: Avalanche Effect &amp; Entropi</h1>
+    <h1>Cek Keacakan (Avalanche &amp; Entropi)</h1>
     <p class="lede">
-        Pengukuran interaktif sensitivitas perubahan bit (avalanche effect ideal
-        &asymp; 50%) dan derajat keacakan cipherteks (Shannon entropy mendekati
-        8.0 bit/byte).
+        Ubah 1 huruf seharusnya mengubah ~50% hasil terkunci (avalanche), dan hasil harus acak (entropi mendekati 8 dari 8).
     </p>
 
     <div class="card">
-        <h2>Parameter Uji Cepat</h2>
+        <h2>Coba Sekarang</h2>
         <div class="grid two">
             <div>
                 <label
@@ -32,18 +30,19 @@
                 <label
                     >Algoritma
                     <select id="a-algo">
-                        <option value="aes-gcm">AES-256-GCM</option>
-                        <option value="chacha20">ChaCha20-Poly1305</option>
+                        <option value="aes-gcm">AES-256-GCM — cepat di laptop</option>
+                        <option value="chacha20">ChaCha20-Poly1305 — cepat di HP</option>
                     </select>
                 </label>
+                <p class="hint">Ideal: avalanche 48–52%, entropi ciphertext &gt; 7.5</p>
             </div>
         </div>
         <div class="btn-row">
             <button class="btn primary" id="a-run-btn">
-                Hitung Metrik Keamanan
+                Hitung Keacakan
             </button>
         </div>
     </div>
 
-    <div id="a-output" class="grid two"></div>
+    <div id="a-output" class="grid two" aria-live="polite"></div>
 </section>

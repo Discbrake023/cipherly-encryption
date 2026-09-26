@@ -1,54 +1,55 @@
 <!-- Panel Demo Skenario Wajib UTS -->
 <section class="panel" id="panel-demo">
-    <h1>Skenario Demo Wajib (UTS)</h1>
+    <h1>Cek Keamanan Otomatis (Demo UTS)</h1>
     <p class="lede">
-        Menjalankan 5 urutan pengujian otomatis: enkripsi berkas &rarr;
-        pratinjau cipherteks &rarr; dekripsi dengan kata sandi benar &rarr;
-        tolak kata sandi salah &rarr; tolak cipherteks yang diubah 1 byte
-        (tampered detection).
+        Satu klik menjalankan 5 cek wajib: kunci berkas, lihat hasil, buka dengan sandi benar, pastikan sandi salah ditolak, pastikan file diubah ditolak.
     </p>
 
     <div class="card">
-        <h2>Konfigurasi Skenario</h2>
+        <h2>1. Siapkan Uji</h2>
         <div class="grid two">
             <div>
                 <label
                     >Algoritma
                     <select id="d-algo">
-                        <option value="aes-gcm">AES-256-GCM</option>
-                        <option value="chacha20">ChaCha20-Poly1305</option>
+                        <option value="aes-gcm">AES-256-GCM — cepat di laptop</option>
+                        <option value="chacha20">ChaCha20-Poly1305 — cepat di HP</option>
                     </select>
                 </label>
                 <label
-                    >Key Derivation Function (KDF)
+                    >Pengacak Kunci
                     <select id="d-kdf">
-                        <option value="pbkdf2">PBKDF2-HMAC-SHA256</option>
-                        <option value="scrypt">scrypt</option>
-                        <option value="argon2">Argon2id</option>
+                        <option value="pbkdf2">PBKDF2 (standar)</option>
+                        <option value="scrypt">scrypt (tahan GPU)</option>
+                        <option value="argon2">Argon2id (paling kuat)</option>
                     </select>
                 </label>
             </div>
             <div>
                 <label
                     >Kata Sandi Uji
+                    <span class="pw-wrap">
                     <input
-                        type="password"
+                        type="text"
                         id="d-password"
                         value="DemoUTS-2026!"
                     />
+                    </span>
                 </label>
                 <label
-                    >Pilih Berkas Uji (mis. PDF/TXT/PNG)
+                    >Berkas Uji (PDF / gambar / teks)
                     <input type="file" id="d-file" />
+                    <span class="field-error" id="d-file-err" role="alert"></span>
                 </label>
             </div>
         </div>
         <div class="btn-row">
             <button class="btn primary" id="d-run-btn">
-                Jalankan 5 Skenario Uji &rarr;
+                Jalankan 5 Cek &rarr;
             </button>
         </div>
+        <div class="progress" id="d-progress" hidden><div class="progress-bar"></div></div>
     </div>
 
-    <div id="d-output"></div>
+    <div id="d-output" aria-live="polite"></div>
 </section>

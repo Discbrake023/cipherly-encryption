@@ -13,25 +13,25 @@ Encryption Suite{% endblock %} {% block styles %}
             </div>
         </a>
 
-        <nav class="tabs" id="tabs">
-            <button class="tab active" data-tab="teks">
-                <span class="tab-indicator"></span>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Fitur Cipherly">
+            <button class="tab active" data-tab="teks" role="tab" id="tab-teks" aria-selected="true" aria-controls="panel-teks">
+                <span class="tab-indicator" aria-hidden="true"></span>
                 Enkripsi Teks
             </button>
-            <button class="tab" data-tab="berkas">
-                <span class="tab-indicator"></span>
+            <button class="tab" data-tab="berkas" role="tab" id="tab-berkas" aria-selected="false" aria-controls="panel-berkas" tabindex="-1">
+                <span class="tab-indicator" aria-hidden="true"></span>
                 Enkripsi Berkas
             </button>
-            <button class="tab" data-tab="demo">
-                <span class="tab-indicator"></span>
+            <button class="tab" data-tab="demo" role="tab" id="tab-demo" aria-selected="false" aria-controls="panel-demo" tabindex="-1">
+                <span class="tab-indicator" aria-hidden="true"></span>
                 Demo Skenario UTS
             </button>
-            <button class="tab" data-tab="analisis">
-                <span class="tab-indicator"></span>
+            <button class="tab" data-tab="analisis" role="tab" id="tab-analisis" aria-selected="false" aria-controls="panel-analisis" tabindex="-1">
+                <span class="tab-indicator" aria-hidden="true"></span>
                 Analisis Cepat
             </button>
-            <button class="tab" data-tab="hibrida">
-                <span class="tab-indicator"></span>
+            <button class="tab" data-tab="hibrida" role="tab" id="tab-hibrida" aria-selected="false" aria-controls="panel-hibrida" tabindex="-1">
+                <span class="tab-indicator" aria-hidden="true"></span>
                 Hibrida (RSA + AES)
             </button>
         </nav>
@@ -48,6 +48,7 @@ Encryption Suite{% endblock %} {% block styles %}
 
     <!-- Workspace Panels -->
     <main class="content">
+        <nav class="breadcrumb" aria-label="Posisi saat ini"><a href="/">Beranda</a> <span aria-hidden="true">/</span> <span id="breadcrumb-current">Enkripsi Teks</span></nav>
         {% include "panels/panel_text.html" %} {% include
         "panels/panel_file.html" %} {% include "panels/panel_demo.html" %} {%
         include "panels/panel_analysis.html" %} {% include

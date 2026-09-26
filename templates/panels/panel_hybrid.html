@@ -1,44 +1,51 @@
 <!-- Panel Enkripsi Hibrida (RSA-OAEP + AEAD) -->
 <section class="panel" id="panel-hibrida">
-    <h1>Fitur Pengayaan: Enkripsi Hibrida (RSA-OAEP + AEAD)</h1>
+    <h1>Kirim Aman Tanpa Tukar Sandi (Hibrida)</h1>
     <p class="lede">
-        Kunci sesi acak membungkus payload plaintext berkecepatan tinggi, dan
-        kunci sesi tersebut diamankan menggunakan kunci publik RSA-2048
-        penerima.
+        Penerima buat kunci, bagikan kunci publik. Pengirim kunci pesan dengan itu. Hanya penerima yang bisa membuka.
     </p>
 
     <div class="card">
-        <h2>Manajemen Pasangan Kunci RSA-2048</h2>
+        <h2>Langkah 1 — Buat Kunci</h2>
         <div class="btn-row">
             <button class="btn primary" id="h-genkeys-btn">
-                Bangkitkan Pasangan Kunci RSA-2048
+                Buat Kunci RSA-2048
+            </button>
+            <button class="btn ghost" id="h-clear-btn" type="button">
+                Hapus Kunci Dari Layar
             </button>
         </div>
+        <p class="warning banner" id="h-warning" role="alert"><i data-lucide="triangle-alert" class="inline-icon"></i> Demo saja: kunci privat hanya di memori browser, jangan pakai data asli.</p>
         <div class="grid two" style="margin-top: 1rem">
             <label
-                >Kunci Publik (PEM)
+                >Kunci Publik (bagikan ke pengirim)
                 <textarea
                     id="h-public"
                     rows="6"
-                    placeholder="Kunci publik akan muncul di sini..."
+                    placeholder="Klik Buat Kunci dulu..."
+                    readonly
+                    spellcheck="false"
                 ></textarea>
+                <span class="btn-row"><button class="btn ghost" id="h-copy-pub" type="button">Salin Publik</button></span>
             </label>
             <label
-                >Kunci Privat (PEM) &mdash;
-                <span style="color: var(--warning)">Demo Memori Sementara</span>
+                >Kunci Privat (rahasia, jangan dibagikan)
                 <textarea
                     id="h-private"
                     rows="6"
-                    placeholder="Kunci privat akan muncul di sini..."
+                    placeholder="Hanya muncul sementara..."
+                    readonly
+                    autocomplete="off"
+                    spellcheck="false"
                 ></textarea>
+                <span class="btn-row"><button class="btn ghost" id="h-copy-priv" type="button">Salin Privat</button></span>
             </label>
         </div>
-        <p class="warning" id="h-warning"></p>
     </div>
 
     <div class="grid two">
         <div class="card">
-            <h2>Enkripsi (Sisi Pengirim)</h2>
+            <h2>Langkah 2 — Kunci Pesan (Pengirim)</h2>
             <label
                 >Pesan Rahasia
                 <textarea
@@ -63,7 +70,7 @@
         </div>
 
         <div class="card">
-            <h2>Dekripsi (Sisi Penerima)</h2>
+            <h2>Langkah 3 — Buka Pesan (Penerima)</h2>
             <p
                 style="
                     margin-bottom: 1rem;

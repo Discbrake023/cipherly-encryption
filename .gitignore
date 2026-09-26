@@ -7,5 +7,6 @@ venv/
 laporan/*.png
 laporan/*.pdf
 .DS_Store
-
+.megamemory
+.omo
 skills/

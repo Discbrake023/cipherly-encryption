@@ -1,14 +1,22 @@
 /**
  * Green Deck Design System - Base Styles & Typography
+ * High-fidelity typography, browser surfaces theming, accessible focus
  */
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
   background-color: var(--bg);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -17,25 +25,55 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  caret-color: var(--primary);
+}
+
+/* Browser Surface Theming: Custom selection */
+::selection {
+  background-color: rgba(29, 185, 84, 0.35);
+  color: #ffffff;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-4);
 }
 
 /* Headings */
 h1 {
   font-family: var(--font-sans);
-  font-size: 2rem;
+  font-size: 1.85rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--text-primary);
   margin-bottom: var(--space-2);
+  line-height: 1.25;
 }
 
 h2 {
   font-family: var(--font-sans);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--space-4);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 h3 {
@@ -48,15 +86,15 @@ h3 {
 
 p {
   color: var(--text-secondary);
-  font-size: 0.93rem;
+  font-size: 0.935rem;
   line-height: 1.6;
 }
 
 .lede {
-  color: var(--neutral);
+  color: var(--text-secondary);
   font-size: 1rem;
-  max-width: 65ch;
-  margin-bottom: var(--space-6);
+  max-width: 68ch;
+  margin-bottom: var(--space-5);
   line-height: 1.6;
 }
 
@@ -70,21 +108,44 @@ a:hover {
   color: var(--primary-hover);
 }
 
-code, pre, kbd {
+code, pre, kbd, samp {
   font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+code {
+  background-color: var(--surface-2);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  color: var(--primary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Accessible utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulseSlow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
-  animation: fadeIn var(--transition-normal) forwards;
+  animation: fadeIn var(--transition-normal) ease-out forwards;
 }

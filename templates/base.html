@@ -24,5 +24,11 @@
     </head>
     <body>
         {% block content %}{% endblock %} {% block scripts %}{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                if (window.lucide) window.lucide.createIcons();
+            });
+        </script>
     </body>
 </html>

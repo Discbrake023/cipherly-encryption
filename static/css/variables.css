@@ -1,42 +1,55 @@
 /**
  * Green Deck Design System - Variables & Design Tokens
- * As specified in docs/design.md
+ * Refined cryptographic workspace palette (no AI slop, high-contrast dark aesthetic)
  */
 
 :root {
-  /* Colors */
+  /* Brand & Accent Colors */
   --primary: #1DB954;
-  --primary-hover: #1ED760;
-  --primary-glow: rgba(29, 185, 84, 0.15);
-  --secondary: #535353;
-  --neutral: #B3B3B3;
+  --primary-hover: #1ed760;
+  --primary-pressed: #179e47;
+  --primary-subtle: rgba(29, 185, 84, 0.08);
+  --primary-border: rgba(29, 185, 84, 0.28);
+  --secondary: #4a4a4a;
+  --secondary-hover: #5e5e5e;
 
-  /* Surfaces & Elevation */
-  --bg: #121212;             /* Level 0: Void Black background */
-  --surface-1: #181818;      /* Level 1: Cards, sidebar, elevated containers */
-  --surface-2: #282828;      /* Level 2: Inputs, dropdowns, hover states */
-  --surface-3: #333333;      /* Level 3: Modals, elevated overlays */
-  
-  /* Text */
-  --text-primary: #FFFFFF;   /* Pure White for maximum contrast */
-  --text-secondary: #A7A7A7; /* Metadata, supporting text */
-  --text-muted: #727272;     /* Subdued text */
+  /* Surfaces & Elevation (Depth via brightness, not halos) */
+  --bg: #0e0e10;             /* Level 0: Deep void foundation */
+  --surface-1: #151518;      /* Level 1: Sidebar, cards, containers */
+  --surface-2: #1e1e22;      /* Level 2: Inputs, dropdowns, dropzones */
+  --surface-3: #28282e;      /* Level 3: Active states, dropdown options, hovers */
+  --surface-4: #34343d;      /* Level 4: Tooltips, overlays */
+
+  /* Text & Readability */
+  --text-primary: #f5f5f7;   /* Off-white for crisp high-contrast readability */
+  --text-secondary: #a1a1aa; /* Metadata, descriptive captions */
+  --text-muted: #71717a;     /* Placeholders, hints, subtle labels */
+  --text-inverse: #000000;   /* On primary green buttons */
 
   /* Borders & Dividers */
-  --border: #282828;         /* Subtle dividers on dark surfaces */
-  --border-focus: #FFFFFF;   /* Focused input border */
-  --border-active: #1DB954;
+  --border: #27272a;         /* Baseline container borders */
+  --border-subtle: #1f1f23;  /* Inner dividers */
+  --border-hover: #3f3f46;   /* Hovered card/input border */
+  --border-focus: #1db954;   /* Focused element outline */
 
-  /* Status Colors */
-  --success: #1DB954;
-  --warning: #F59B23;
-  --error: #E22134;
+  /* Status Colors (Accessible contrast against dark surfaces) */
+  --success: #10b981;
+  --success-subtle: rgba(16, 185, 129, 0.08);
+  --success-border: rgba(16, 185, 129, 0.28);
+
+  --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.08);
+  --warning-border: rgba(245, 158, 11, 0.28);
+
+  --error: #ef4444;
+  --error-subtle: rgba(239, 68, 68, 0.08);
+  --error-border: rgba(239, 68, 68, 0.28);
 
   /* Typography */
   --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, Menlo, monospace;
 
-  /* Spacing Scale (8px base) */
+  /* Spacing Scale (8px rhythm) */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -47,13 +60,13 @@
   --space-8: 64px;
 
   /* Border Radii */
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 200ms ease;
+  --transition-fast: 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }

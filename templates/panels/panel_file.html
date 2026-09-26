@@ -2,69 +2,87 @@
 <section class="panel" id="panel-berkas">
     <h1>Enkripsi &amp; Dekripsi Berkas</h1>
     <p class="lede">
-        Unggah berkas apa pun (dokumen, gambar, PDF). Berkas hasil enkripsi
-        memakai ekstensi <code>.krp</code> dan menyimpan salt, nonce, serta
-        metadata algoritma dalam binary envelope untuk didekripsi kembali.
+        Kunci berkas apa pun (PDF, gambar, dokumen). Hasilnya ekstensi <code>.krp</code> — sudah termasuk kunci pembuka di dalamnya.
     </p>
 
     <div class="grid two">
         <div class="card">
-            <h2>Enkripsi Berkas</h2>
+            <h2><i data-lucide="lock" class="h2-icon"></i> Kunci Berkas</h2>
             <label
-                >Algoritma
-                <select id="f-algo">
-                    <option value="aes-gcm">AES-256-GCM</option>
-                    <option value="chacha20">ChaCha20-Poly1305</option>
-                </select>
-            </label>
-            <label
-                >Key Derivation Function (KDF)
-                <select id="f-kdf">
-                    <option value="pbkdf2">PBKDF2-HMAC-SHA256</option>
-                    <option value="scrypt">scrypt</option>
-                    <option value="argon2">Argon2id</option>
-                </select>
-            </label>
-            <label
-                >Kata Sandi
+                >Kata Sandi <span class="hint">(min 8 karakter)</span>
+                <span class="pw-wrap">
                 <input
                     type="password"
                     id="f-password-enc"
-                    placeholder="Kata sandi enkripsi"
+                    placeholder="Kata sandi pengunci"
+                    autocomplete="new-password"
                 />
+                <button type="button" class="pw-toggle" data-for="f-password-enc" aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
+                </span>
+                <span class="field-error" id="f-password-enc-err" role="alert"></span>
             </label>
             <label
                 >Pilih Berkas
-                <input type="file" id="f-file-enc" />
+                <div class="dropzone" id="dz-enc" tabindex="0" role="button" aria-label="Pilih atau seret berkas untuk dikunci">
+                    <span>Seret berkas ke sini atau <u>klik untuk pilih</u></span>
+                    <span class="file-meta" id="f-file-enc-meta"></span>
+                </div>
+                <input type="file" id="f-file-enc" hidden />
             </label>
+            <details class="advanced-inline">
+                <summary>Pengaturan (Algoritma &amp; KDF)</summary>
+                <label
+                    >Algoritma
+                    <select id="f-algo">
+                        <option value="aes-gcm">AES-256-GCM — cepat di laptop</option>
+                        <option value="chacha20">ChaCha20-Poly1305 — cepat di HP</option>
+                    </select>
+                </label>
+                <label
+                    >Pengacak Kunci
+                    <select id="f-kdf">
+                        <option value="pbkdf2">PBKDF2 (standar)</option>
+                        <option value="scrypt">scrypt (tahan GPU)</option>
+                        <option value="argon2">Argon2id (paling kuat)</option>
+                    </select>
+                </label>
+            </details>
             <div class="btn-row">
                 <button class="btn primary" id="f-encrypt-btn">
                     Enkripsi &amp; Unduh (.krp)
                 </button>
             </div>
-            <div id="f-enc-status" class="status"></div>
+            <div id="f-enc-status" class="status" role="status" aria-live="polite"></div>
         </div>
 
         <div class="card">
-            <h2>Dekripsi Berkas</h2>
+            <h2><i data-lucide="lock-open" class="h2-icon"></i> Buka Berkas .krp</h2>
             <label
-                >Kata Sandi
+                >Kata Sandi Pembuka
+                <span class="pw-wrap">
                 <input
                     type="password"
                     id="f-password-dec"
-                    placeholder="Kata sandi dekripsi"
+                    placeholder="Kata sandi yang sama saat mengunci"
+                    autocomplete="current-password"
                 />
+                <button type="button" class="pw-toggle" data-for="f-password-dec" aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
+                </span>
             </label>
             <label
                 >Pilih Berkas Terenkripsi (.krp)
-                <input type="file" id="f-file-dec" />
+                <div class="dropzone" id="dz-dec" tabindex="0" role="button" aria-label="Pilih atau seret berkas krp untuk dibuka">
+                    <span>Seret file <code>.krp</code> ke sini atau <u>klik untuk pilih</u></span>
+                    <span class="file-meta" id="f-file-dec-meta"></span>
+                </div>
+                <input type="file" id="f-file-dec" accept=".krp" hidden />
             </label>
             <div class="btn-row">
                 <button class="btn secondary" id="f-decrypt-btn">
                     Dekripsi &amp; Unduh Asli
                 </button>
             </div>
-            <div id="f-dec-status" class="status"></div>
+            <div id="f-dec-status" class="status" role="status" aria-live="polite"></div>
         </div>
     </div>
 </section>
