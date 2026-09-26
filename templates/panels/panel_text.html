@@ -11,102 +11,36 @@
         <label class="mode-opt"><input type="radio" name="t-mode" value="decrypt" /> <i data-lucide="lock-open"></i> Dekripsi</label>
     </fieldset>
 
-    <div id="t-encrypt-view">
-    <div class="grid two">
-        <div class="card">
-            <h2>Pesan + Kata Sandi</h2>
-            <label
-                >Kata Sandi <span class="hint">(min 8 karakter)</span>
-                <span class="pw-wrap">
-                <input
-                    type="password"
-                    id="t-password"
-                    placeholder="Masukkan kata sandi"
-                    autocomplete="new-password"
-                    minlength="8"
-                />
-                <button type="button" class="pw-toggle" data-for="t-password" aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
-                </span>
-                <span class="field-error" id="t-password-err" role="alert"></span>
+    <!-- Pengaturan di area utama (instruksi §2): selalu terlihat, disembunyikan saat mode Dekripsi -->
+    <fieldset class="settings-block" id="t-settings">
+        <legend class="sr-only">Pengaturan Algoritma &amp; KDF</legend>
+        <div class="settings-title"><i data-lucide="sliders-horizontal" aria-hidden="true"></i> Pengaturan Algoritma &amp; KDF</div>
+
+        <div class="setting-label" id="t-algo-label">Algoritma</div>
+        <div class="algo-cards" role="group" aria-labelledby="t-algo-label">
+            <label class="algo-card">
+                <input type="radio" name="t-algo" value="aes-gcm" checked class="sr-only" />
+                <i data-lucide="cpu" class="algo-icon" aria-hidden="true"></i>
+                <span class="algo-name">AES-256-GCM</span>
+                <span class="algo-desc">Cepat di laptop &amp; desktop</span>
             </label>
-            <label
-                >Pesan Asli
-                <textarea
-                    id="t-plaintext"
-                    rows="7"
-                    placeholder="Tulis pesan yang akan dikunci..."
-                ></textarea>
-                <span class="field-error" id="t-plaintext-err" role="alert"></span>
+            <label class="algo-card">
+                <input type="radio" name="t-algo" value="chacha20" class="sr-only" />
+                <i data-lucide="smartphone" class="algo-icon" aria-hidden="true"></i>
+                <span class="algo-name">ChaCha20-Poly1305</span>
+                <span class="algo-desc">Cepat di HP &amp; perangkat mobile</span>
             </label>
-            <div class="btn-row">
-                <button class="btn primary" id="t-encrypt-btn">
-                    Enkripsi &rarr;
-                </button>
-            </div>
         </div>
 
-        <div class="card">
-            <h2>Hasil Terkunci</h2>
-            <label
-                >Hasil (siap salin)
-                <textarea
-                    id="t-ciphertext"
-                    rows="5"
-                    readonly
-                    placeholder="Hasil enkripsi muncul di sini..."
-                ></textarea>
-            </label>
-            <div class="meta-row" id="t-meta"></div>
-            <div class="btn-row">
-                <button class="btn ghost" id="t-copy-btn">Salin Hasil</button>
-            </div>
-            <div id="t-result" class="result-box" role="status" aria-live="polite"></div>
-        </div>
-    </div>
-    </div>
-
-    <div id="t-decrypt-view" hidden>
-    <div class="card">
-        <h2>Buka Pesan Terkunci</h2>
-        <label
-            >Tempel Hasil Terkunci
-            <textarea
-                id="t-ciphertext-dec"
-                rows="5"
-                placeholder="Tempel Base64 / hex dari hasil enkripsi..."
-            ></textarea>
-            <span class="field-error" id="t-ciphertext-dec-err" role="alert"></span>
-        </label>
-        <label
-            >Kata Sandi Pembuka
-            <span class="pw-wrap">
-            <input type="password" id="t-password-dec" placeholder="Kata sandi yang sama saat mengunci" autocomplete="current-password" />
-            <button type="button" class="pw-toggle" data-for="t-password-dec" aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
-            </span>
-        </label>
-        <div class="btn-row">
-            <button class="btn secondary" id="t-decrypt-btn">
-                &larr; Dekripsi
-            </button>
-        </div>
-        <div id="t-result-dec" class="result-box" role="status" aria-live="polite"></div>
-    </div>
-    </div>
-
-    <details class="card advanced">
-        <summary>Pengaturan Lanjutan (Algoritma &amp; KDF)</summary>
         <div class="grid two">
             <label
-                >Algoritma
-                <select id="t-algo">
-                    <option value="aes-gcm">AES-256-GCM — cepat di laptop</option>
-                    <option value="chacha20">
-                        ChaCha20-Poly1305 — cepat di HP
-                    </option>
-                </select>
-            </label>
-            <label
                 >Pengacak Kunci (KDF)
+                <span
+                    class="label-inline"
+                    data-tippy-content="Key Derivation Function (KDF) mengubah kata sandi menjadi kunci kriptografi kuat. PBKDF2, scrypt, dan Argon2id direkomendasikan untuk mencegah serangan brute-force."
+                >
+                    <i data-lucide="info" class="info-icon" aria-label="Penjelasan KDF"></i>
+                </span>
                 <select id="t-kdf">
                     <option value="pbkdf2">
                         PBKDF2 (standar, kompatibel)
@@ -123,5 +57,88 @@
                 </select>
             </label>
         </div>
-    </details>
+    </fieldset>
+
+    <div class="grid two">
+        <div class="card">
+            <h2 id="t-left-title">Pesan Asli</h2>
+            <div id="t-in-enc">
+                <label
+                    >Pesan Asli
+                    <textarea id="t-plaintext" rows="7" placeholder="Tulis pesan yang akan dikunci..."></textarea>
+                    <span class="field-error" id="t-plaintext-err" role="alert"></span>
+                </label>
+                <label
+                    >Kata Sandi <span class="hint">(min 8 karakter)</span>
+                    <span class="pw-wrap">
+                    <input
+                        type="password"
+                        id="t-password"
+                        placeholder="Masukkan kata sandi"
+                        autocomplete="new-password"
+                        minlength="8"
+                    />
+                    <button type="button" class="pw-toggle" data-for="t-password" aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
+                    </span>
+                    <span class="field-error" id="t-password-err" role="alert"></span>
+                </label>
+                <!-- strength meter markup: Task 5 -->
+                <div class="pw-meter" id="t-password-meter">
+                    <div class="pw-meter-track"><div class="pw-meter-fill"></div></div>
+                    <div class="pw-meter-label" aria-live="polite"></div>
+                    <ul class="pw-rules">
+                        <li data-rule="len"><i data-lucide="check" class="rule-yes"></i><i data-lucide="x" class="rule-no"></i> Minimal 8 karakter</li>
+                        <li data-rule="num"><i data-lucide="check" class="rule-yes"></i><i data-lucide="x" class="rule-no"></i> Ada angka</li>
+                        <li data-rule="sym"><i data-lucide="check" class="rule-yes"></i><i data-lucide="x" class="rule-no"></i> Ada simbol</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="t-in-dec" hidden>
+                <label
+                    >Ciphertext (tempel hasil terkunci)
+                    <textarea id="t-ciphertext-dec" rows="7" placeholder="Tempel Base64 / hex dari hasil enkripsi..."></textarea>
+                    <span class="field-error" id="t-ciphertext-dec-err" role="alert"></span>
+                </label>
+                <label
+                    >Kata Sandi Pembuka
+                    <span class="pw-wrap">
+                    <input type="password" id="t-password-dec" placeholder="Kata sandi yang sama saat mengunci" autocomplete="current-password" />
+                    <button type="button" class="pw-toggle" data-for="t-password-dec" aria-label="Tampilkan kata sandi"><i data-lucide="eye"></i></button>
+                    </span>
+                </label>
+            </div>
+            <div class="btn-row">
+                <button class="btn primary" id="t-encrypt-btn">Enkripsi &rarr;</button>
+                <button class="btn secondary" id="t-decrypt-btn" hidden>&larr; Dekripsi</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 id="t-right-title">Hasil Terkunci</h2>
+            <div id="t-out-enc">
+                <label
+                    >Hasil (siap salin)
+                    <textarea id="t-ciphertext" rows="7" readonly placeholder="Hasil enkripsi muncul di sini..."></textarea>
+                </label>
+                <!-- metadata panel (Task 7) -->
+                <div class="meta-panel" id="t-meta" hidden>
+                    <div class="meta-panel-title"><i data-lucide="info"></i> Metadata</div>
+                    <dl class="meta-list">
+                        <div><dt>Algoritma</dt><dd id="t-meta-algo"></dd></div>
+                        <div><dt>KDF</dt><dd id="t-meta-kdf"></dd></div>
+                        <div><dt>Waktu proses</dt><dd id="t-meta-time"></dd></div>
+                        <div><dt>Salt</dt><dd id="t-meta-salt"></dd></div>
+                        <div><dt>Nonce</dt><dd id="t-meta-nonce"></dd></div>
+                    </dl>
+                </div>
+                <div class="btn-row">
+                    <button class="btn ghost" id="t-copy-btn">Salin Hasil</button>
+                </div>
+                <div id="t-result" class="result-box" role="status" aria-live="polite"></div>
+            </div>
+            <div id="t-out-dec" hidden>
+                <div id="t-result-dec" class="result-box" role="status" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
 </section>

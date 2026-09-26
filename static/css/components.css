@@ -250,23 +250,20 @@ textarea {
   pointer-events: none;
 }
 
-/* ---------- Custom Select / Dropdown Component ---------- */
-.select-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-
-.select-wrapper select,
-select.custom-select {
+/* ---------- Custom Styled Select (native <select>, tampilan via CSS murni) ---------- */
+select {
   width: 100%;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: var(--surface-2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
   border: 1px solid var(--border);
   color: var(--text-primary);
-  padding: 10px 38px 10px 14px;
+  padding: 10px 36px 10px 14px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
   font-size: 13.5px;
@@ -276,40 +273,34 @@ select.custom-select {
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
-.select-wrapper select:hover,
-select.custom-select:hover {
+select:hover {
   border-color: var(--border-hover);
-  background-color: #232328;
+  background-color: var(--surface-3);
 }
 
-.select-wrapper select:focus,
-select.custom-select:focus {
+select:focus {
   outline: none;
   border-color: var(--border-focus);
+  background-color: var(--surface-2);
   box-shadow: 0 0 0 1px var(--border-focus);
 }
 
-.select-wrapper select option {
-  background-color: #1a1a1e;
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select option {
+  background-color: var(--surface-3);
   color: var(--text-primary);
-  padding: 10px 14px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
-.select-wrapper .select-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.select-wrapper .select-icon svg {
-  width: 16px;
-  height: 16px;
+select option:checked {
+  background-color: var(--surface-4);
+  color: var(--text-primary);
 }
 
 /* ---------- File Upload Dropzone Component ---------- */
@@ -925,4 +916,363 @@ svg.lucide.step-ico {
 .feature-icon-box svg.lucide {
   width: 20px;
   height: 20px;
+}
+
+/* ---------- Toast Notification ---------- */
+.toast-root {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: min(360px, calc(100vw - 32px));
+}
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: 12px 14px;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  font-size: 13.5px;
+  color: var(--text-primary);
+  animation: toast-in var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast.success {
+  border-color: var(--success-border);
+}
+.toast.success .toast-icon {
+  color: var(--success);
+}
+.toast.error {
+  border-color: var(--error-border);
+}
+.toast.error .toast-icon {
+  color: var(--error);
+}
+.toast-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.toast-msg {
+  flex: 1;
+  line-height: 1.45;
+}
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  padding: 2px;
+  border-radius: var(--radius-xs);
+}
+.toast-close:hover {
+  color: var(--text-primary);
+  background-color: var(--surface-3);
+}
+.toast.out {
+  animation: toast-out 200ms ease forwards;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+/* ---------- Tippy.js Tooltip (theme cipherly) ---------- */
+.tippy-box[data-theme~="cipherly"] {
+  background-color: var(--surface-2);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.tippy-box[data-theme~="cipherly"] .tippy-arrow {
+  color: var(--surface-2);
+}
+.tippy-box[data-theme~="cipherly"] .tippy-content {
+  padding: 6px 10px;
+  line-height: 1.5;
+}
+
+/* Ikon info KDF — wrapper <span data-tippy-content> memegang tooltip,
+   ikon di dalamnya diganti Lucide tanpa kehilangan atribut. */
+.label-inline {
+  display: inline-flex;
+  align-items: center;
+}
+.info-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+  cursor: help;
+  flex-shrink: 0;
+}
+.info-icon:hover {
+  color: var(--primary);
+}
+
+/* ---------- Settings Block + Algorithm Card Selector ---------- */
+.settings-block {
+  border: none;
+  padding: var(--space-4) var(--space-5);
+  margin: 0 0 var(--space-5);
+  background-color: var(--surface-1);
+  border-radius: var(--radius-md);
+}
+.settings-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+.settings-title svg {
+  width: 15px;
+  height: 15px;
+  color: var(--primary);
+}
+.setting-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+.algo-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.algo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-bottom: 0;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+.algo-card:hover {
+  border-color: var(--border-hover);
+  background-color: var(--surface-3);
+}
+.algo-card:has(input:checked) {
+  border-color: var(--primary);
+  background-color: var(--primary-subtle);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+.algo-card:has(input:focus-visible) {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+.algo-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+}
+.algo-card:has(input:checked) .algo-icon {
+  color: var(--primary);
+}
+.algo-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.algo-desc {
+  font-size: 11.5px;
+  color: var(--text-secondary); /* WCAG AA: muted hanya 3.4:1 di surface-2 */
+}
+@media (max-width: 640px) {
+  .algo-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Password Strength Meter ---------- */
+.pw-meter {
+  margin: -8px 0 var(--space-4);
+}
+.pw-meter-track {
+  height: 6px;
+  background-color: var(--surface-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.pw-meter-fill {
+  height: 100%;
+  width: 0;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-normal), background-color var(--transition-fast);
+}
+.pw-meter-fill.weak {
+  background-color: var(--error);
+}
+.pw-meter-fill.fair {
+  background-color: var(--warning);
+}
+.pw-meter-fill.strong {
+  background-color: var(--success);
+}
+.pw-meter-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  margin-top: 4px;
+  min-height: 15px;
+  color: var(--text-secondary);
+}
+.pw-rules {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+.pw-rules li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary); /* WCAG AA */
+}
+.pw-rules li.ok {
+  color: var(--success);
+}
+.pw-rules svg {
+  width: 13px;
+  height: 13px;
+}
+.pw-rules .rule-yes {
+  display: none;
+}
+.pw-rules .rule-no {
+  display: block;
+}
+.pw-rules li.ok .rule-yes {
+  display: block;
+}
+.pw-rules li.ok .rule-no {
+  display: none;
+}
+
+/* ---------- Progress (indeterminate, instruksi §3) ---------- */
+.progress-indeterminate .progress-bar {
+  width: 40%;
+  animation: progress-slide 1.2s ease-in-out infinite;
+}
+@keyframes progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+/* ---------- Spinner tombol (instruksi §3) ---------- */
+.btn.is-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn.is-loading::before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Metadata panel (instruksi §5) ---------- */
+.meta-panel {
+  margin-top: var(--space-3);
+  background-color: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.meta-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary); /* WCAG AA */
+  margin-bottom: 8px;
+}
+.meta-panel-title svg {
+  width: 13px;
+  height: 13px;
+}
+.meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+.meta-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.meta-list dt {
+  color: var(--text-secondary); /* WCAG AA */
+}
+.meta-list dd {
+  color: var(--text-secondary);
+  text-align: right;
+  word-break: break-all;
+}
+#panel-teks .result-box,
+#panel-teks .meta-panel {
+  min-height: 44px;
+}
+
+/* ---------- Reduced motion (instruksi §8) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .toast.out,
+  .panel.active,
+  .progress-indeterminate .progress-bar,
+  .btn.is-loading::before,
+  .pw-meter-fill,
+  .animate-fade-in {
+    animation: none !important;
+    transition: none !important;
+  }
 }

@@ -5,6 +5,43 @@
         Kunci berkas apa pun (PDF, gambar, dokumen). Hasilnya ekstensi <code>.krp</code> — sudah termasuk kunci pembuka di dalamnya.
     </p>
 
+    <!-- Pengaturan di area utama (instruksi §2): tanpa collapse -->
+    <fieldset class="settings-block" id="f-settings">
+        <legend class="sr-only">Pengaturan Algoritma &amp; KDF</legend>
+        <div class="settings-title"><i data-lucide="sliders-horizontal" aria-hidden="true"></i> Pengaturan Algoritma &amp; KDF</div>
+
+        <div class="setting-label" id="f-algo-label">Algoritma</div>
+        <div class="algo-cards" role="group" aria-labelledby="f-algo-label">
+            <label class="algo-card">
+                <input type="radio" name="f-algo" value="aes-gcm" checked class="sr-only" />
+                <i data-lucide="cpu" class="algo-icon" aria-hidden="true"></i>
+                <span class="algo-name">AES-256-GCM</span>
+                <span class="algo-desc">Cepat di laptop &amp; desktop</span>
+            </label>
+            <label class="algo-card">
+                <input type="radio" name="f-algo" value="chacha20" class="sr-only" />
+                <i data-lucide="smartphone" class="algo-icon" aria-hidden="true"></i>
+                <span class="algo-name">ChaCha20-Poly1305</span>
+                <span class="algo-desc">Cepat di HP &amp; perangkat mobile</span>
+            </label>
+        </div>
+
+        <label
+            >Pengacak Kunci (KDF)
+            <span
+                class="label-inline"
+                data-tippy-content="Key Derivation Function (KDF) mengubah kata sandi menjadi kunci kriptografi kuat. PBKDF2, scrypt, dan Argon2id direkomendasikan untuk mencegah serangan brute-force."
+            >
+                <i data-lucide="info" class="info-icon" aria-label="Penjelasan KDF"></i>
+            </span>
+            <select id="f-kdf">
+                <option value="pbkdf2">PBKDF2 (standar)</option>
+                <option value="scrypt">scrypt (tahan GPU)</option>
+                <option value="argon2">Argon2id (paling kuat)</option>
+            </select>
+        </label>
+    </fieldset>
+
     <div class="grid two">
         <div class="card">
             <h2><i data-lucide="lock" class="h2-icon"></i> Kunci Berkas</h2>
@@ -21,6 +58,15 @@
                 </span>
                 <span class="field-error" id="f-password-enc-err" role="alert"></span>
             </label>
+            <div class="pw-meter" id="f-password-meter">
+                <div class="pw-meter-track"><div class="pw-meter-fill"></div></div>
+                <div class="pw-meter-label" aria-live="polite"></div>
+                <ul class="pw-rules">
+                    <li data-rule="len"><i data-lucide="check" class="rule-yes"></i><i data-lucide="x" class="rule-no"></i> Minimal 8 karakter</li>
+                    <li data-rule="num"><i data-lucide="check" class="rule-yes"></i><i data-lucide="x" class="rule-no"></i> Ada angka</li>
+                    <li data-rule="sym"><i data-lucide="check" class="rule-yes"></i><i data-lucide="x" class="rule-no"></i> Ada simbol</li>
+                </ul>
+            </div>
             <label
                 >Pilih Berkas
                 <div class="dropzone" id="dz-enc" tabindex="0" role="button" aria-label="Pilih atau seret berkas untuk dikunci">
@@ -29,30 +75,27 @@
                 </div>
                 <input type="file" id="f-file-enc" hidden />
             </label>
-            <details class="advanced-inline">
-                <summary>Pengaturan (Algoritma &amp; KDF)</summary>
-                <label
-                    >Algoritma
-                    <select id="f-algo">
-                        <option value="aes-gcm">AES-256-GCM — cepat di laptop</option>
-                        <option value="chacha20">ChaCha20-Poly1305 — cepat di HP</option>
-                    </select>
-                </label>
-                <label
-                    >Pengacak Kunci
-                    <select id="f-kdf">
-                        <option value="pbkdf2">PBKDF2 (standar)</option>
-                        <option value="scrypt">scrypt (tahan GPU)</option>
-                        <option value="argon2">Argon2id (paling kuat)</option>
-                    </select>
-                </label>
-            </details>
+            <div class="file-preview-card" id="f-file-enc-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-icon"><i data-lucide="file"></i></span>
+                    <div class="file-preview-details">
+                        <span class="file-preview-name"></span>
+                        <span class="file-preview-size"></span>
+                    </div>
+                </div>
+                <button type="button" class="file-preview-remove" aria-label="Hapus berkas yang dipilih"><i data-lucide="x"></i></button>
+            </div>
+            <div class="progress" id="f-enc-progress" hidden><div class="progress-bar"></div></div>
             <div class="btn-row">
                 <button class="btn primary" id="f-encrypt-btn">
                     Enkripsi &amp; Unduh (.krp)
                 </button>
             </div>
             <div id="f-enc-status" class="status" role="status" aria-live="polite"></div>
+            <div id="f-enc-result" class="result-box" hidden>
+                <span id="f-enc-result-text"></span>
+                <div class="btn-row"><button type="button" class="btn primary sm" id="f-enc-download-btn"><i data-lucide="download"></i> Unduh File .krp</button></div>
+            </div>
         </div>
 
         <div class="card">
@@ -77,6 +120,17 @@
                 </div>
                 <input type="file" id="f-file-dec" accept=".krp" hidden />
             </label>
+            <div class="file-preview-card" id="f-file-dec-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-icon"><i data-lucide="file"></i></span>
+                    <div class="file-preview-details">
+                        <span class="file-preview-name"></span>
+                        <span class="file-preview-size"></span>
+                    </div>
+                </div>
+                <button type="button" class="file-preview-remove" aria-label="Hapus berkas yang dipilih"><i data-lucide="x"></i></button>
+            </div>
+            <div class="progress" id="f-dec-progress" hidden><div class="progress-bar"></div></div>
             <div class="btn-row">
                 <button class="btn secondary" id="f-decrypt-btn">
                     Dekripsi &amp; Unduh Asli

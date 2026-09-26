@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<title>Cipherly DOM Selftest</title>
+<link rel="stylesheet" href="/static/css/variables.css" />
+<link rel="stylesheet" href="/static/css/base.css" />
+<link rel="stylesheet" href="/static/css/components.css" />
+<link rel="stylesheet" href="/static/css/app.css" />
+</head>
+<body>
+<pre id="results">PENDING</pre>
+<iframe id="frame" src="/app" style="width: 1280px; height: 960px; border: 0"></iframe>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.48.0/dist/umd/lucide.min.js"></script>
+<script type="module">
+const results = [];
+const ok = (name, cond, detail = "") => results.push({ name, pass: !!cond, detail: cond ? "" : String(detail) });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function waitFor(fn, timeout = 6000) {
+  const t0 = Date.now();
+  while (Date.now() - t0 < timeout) {
+    if (fn()) return true;
+    await sleep(50);
+  }
+  return false;
+}
+const groups = (new URLSearchParams(location.search).get("groups") || "all").split(",");
+const has = (g) => groups.includes("all") || groups.includes(g);
+
+const frameEl = document.getElementById("frame");
+await waitFor(() => frameEl.contentDocument && frameEl.contentDocument.readyState === "complete" && frameEl.contentDocument.getElementById("panel-teks"));
+const fd = frameEl.contentDocument;
+const fw = frameEl.contentWindow;
+
+/* ---------- G1: Toast ---------- */
+if (has("t1")) {
+  try {
+    const { showToast } = await import("/static/js/toast.js");
+    const t1 = showToast("Tes sukses", "success", 4000);
+    ok("t1: toast masuk ke #toast-root dan terhubung", !!document.getElementById("toast-root") && t1.isConnected);
+    ok("t1: toast sukses = class success + role status", t1.classList.contains("success") && t1.getAttribute("role") === "status", t1.className + "/" + t1.getAttribute("role"));
+    const t2 = showToast("Tes gagal", "error", 6000);
+    ok("t1: toast error = class error + role alert", t2.classList.contains("error") && t2.getAttribute("role") === "alert", t2.className);
+    ok("t1: pesan di render sebagai textContent", t1.querySelector(".toast-msg").textContent === "Tes sukses");
+    ok("t1: punya tombol close ber-label aria", !!t1.querySelector('.toast-close[aria-label="Tutup notifikasi"]'));
+    t1.querySelector(".toast-close").click();
+    await sleep(400);
+    ok("t1: tombol close menghapus toast", !t1.isConnected);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await sleep(400);
+    ok("t1: Escape menutup toast teratas", !t2.isConnected);
+    await sleep(4500);
+    const root = document.getElementById("toast-root");
+    ok("t1: auto-dismiss membersihkan semua toast", root.querySelectorAll(".toast").length === 0, root.innerHTML.slice(0, 120));
+  } catch (e) {
+    ok("t1: toast module runs", false, e.message);
+  }
+}
+
+/* ---------- G2: Tippy + info icon ---------- */
+if (has("t2")) {
+  try {
+    ok("t2: tippy CDN termuat di frame", typeof fw.tippy !== "undefined", typeof fw.tippy);
+    const spans = fd.querySelectorAll("[data-tippy-content]");
+    ok("t2: ada wrapper data-tippy-content di frame", spans.length >= 2, "count=" + spans.length);
+    const kdfT = fd.querySelector("#t-kdf");
+    ok("t2: ikon info KDF teks ada di label select #t-kdf", !!(kdfT && kdfT.closest("label") && kdfT.closest("label").querySelector("[data-tippy-content]")));
+    const kdfF = fd.querySelector("#f-kdf");
+    ok("t2: ikon info KDF berkas ada di label select #f-kdf", !!(kdfF && kdfF.closest("label") && kdfF.closest("label").querySelector("[data-tippy-content]")));
+    if (spans[0]) {
+      ok("t2: instance tippy terpasang pada wrapper", spans[0]._tippy != null, "_tippy=" + String(spans[0]._tippy));
+      ok("t2: tooltip content sesuai teks KDF", /Key Derivation Function/.test(spans[0].getAttribute("data-tippy-content") || ""));
+      if (spans[0]._tippy) {
+        const box = spans[0]._tippy.popper.querySelector(".tippy-box");
+        ok("t2: theme cipherly dipakai", !!box && box.getAttribute("data-theme") === "cipherly", box ? box.getAttribute("data-theme") : "no box");
+      }
+    }
+  } catch (e) {
+    ok("t2: tippy checks run", false, e.message);
+  }
+}
+
+/* ---------- G3: Card selector + settings ---------- */
+if (has("t3")) {
+  try {
+    const settings = fd.querySelector("#t-settings");
+    ok("t3: fieldset #t-settings ada dan terlihat", !!settings && !settings.hidden, settings ? "hidden=" + settings.hidden : "missing");
+    const tAlgos = fd.querySelectorAll('input[name="t-algo"]');
+    ok("t3: radio t-algo = 2 (aes-gcm, chacha20)", tAlgos.length === 2 && tAlgos[0].value === "aes-gcm" && tAlgos[1].value === "chacha20");
+    const fAlgos = fd.querySelectorAll('input[name="f-algo"]');
+    ok("t3: radio f-algo = 2 (aes-gcm, chacha20)", fAlgos.length === 2 && fAlgos[0].value === "aes-gcm" && fAlgos[1].value === "chacha20");
+    ok("t3: aes-gcm default tercentang di kedua panel", fd.querySelector('input[name="t-algo"]:checked')?.value === "aes-gcm" && fd.querySelector('input[name="f-algo"]:checked')?.value === "aes-gcm");
+    ok("t3: tidak ada lagi <details> advanced di panel teks/berkas", !fd.querySelector("#panel-teks details.advanced") && !fd.querySelector("#panel-berkas details.advanced-inline"));
+    ok("t3: select KDF & encoding tetap ada dengan ID sama", !!fd.querySelector("#t-kdf") && !!fd.querySelector("#t-encoding") && !!fd.querySelector("#f-kdf"));
+    // pindahkan pilihan ke chacha20 — highlight ikut (computed style)
+    const chacha = fd.querySelector('input[name="t-algo"][value="chacha20"]');
+    chacha.click();
+    ok("t3: klik kartu ChaCha20 → checked pindah", fd.querySelector('input[name="t-algo"]:checked')?.value === "chacha20");
+    const card = chacha.closest(".algo-card");
+    const cs = fw.getComputedStyle(card);
+    const borderColor = cs.borderColor;
+    ok("t3: highlight visual kartu terpilih (border primary)", borderColor === "rgb(29, 185, 84)" || cs.boxShadow.includes("rgb(29, 185, 84)"), "border=" + borderColor + " shadow=" + cs.boxShadow.slice(0, 60));
+    const kdfSel = fd.querySelector("#t-kdf");
+    ok("t3: select KDF fungsional (bisa ganti value)", (() => { const old = kdfSel.value; kdfSel.value = "scrypt"; const v = kdfSel.value; kdfSel.value = old; return v === "scrypt"; })());
+    // kembalikan default
+    fd.querySelector('input[name="t-algo"][value="aes-gcm"]').click();
+  } catch (e) {
+    ok("t3: card selector checks run", false, e.message);
+  }
+}
+
+/* ---------- G4: Unified mode toggle ---------- */
+if (has("t4")) {
+  try {
+    const left = fd.querySelector("#t-left-title");
+    const right = fd.querySelector("#t-right-title");
+    ok("t4: label awal kiri='Pesan Asli'", left.textContent === "Pesan Asli", left.textContent);
+    ok("t4: label awal kanan='Hasil Terkunci'", right.textContent === "Hasil Terkunci", right.textContent);
+    ok("t4: pengaturan terlihat di mode enkripsi", !fd.querySelector("#t-settings").hidden);
+    ok("t4: tombol enkripsi tampil, dekripsi tersembunyi", !fd.querySelector("#t-encrypt-btn").hidden && fd.querySelector("#t-decrypt-btn").hidden && fd.querySelector("#t-encrypt-btn").offsetParent !== null && fd.querySelector("#t-decrypt-btn").offsetParent === null);
+    // ketik pesan, lalu pindah mode
+    const pt = fd.querySelector("#t-plaintext");
+    pt.value = "pesan rahasia uji coba";
+    const decRadio = fd.querySelector('input[name="t-mode"][value="decrypt"]');
+    decRadio.click();
+    await sleep(50);
+    ok("t4: dekripsi → label kiri='Ciphertext'", left.textContent === "Ciphertext", left.textContent);
+    ok("t4: dekripsi → label kanan='Pesan Terbuka'", right.textContent === "Pesan Terbuka", right.textContent);
+    ok("t4: dekripsi → pengaturan tersembunyi", fd.querySelector("#t-settings").hidden === true);
+    ok("t4: dekripsi → input teks tersembunyi, input ciphertext tampil", fd.querySelector("#t-in-enc").hidden === true && fd.querySelector("#t-in-dec").hidden === false);
+    ok("t4: dekripsi → tombol aksi = DEKRIPSI", fd.querySelector("#t-decrypt-btn").hidden === false && fd.querySelector("#t-encrypt-btn").hidden === true && fd.querySelector("#t-decrypt-btn").offsetParent !== null && fd.querySelector("#t-encrypt-btn").offsetParent === null);
+    ok("t4: dekripsi → panel output kanan berpindah", fd.querySelector("#t-out-enc").hidden === true && fd.querySelector("#t-out-dec").hidden === false);
+    // kembali ke enkripsi — teks harus selamat
+    fd.querySelector('input[name="t-mode"][value="encrypt"]').click();
+    await sleep(50);
+    ok("t4: kembali ke enkripsi → teks pesan TIDAK hilang", fd.querySelector("#t-plaintext").value === "pesan rahasia uji coba", fd.querySelector("#t-plaintext").value);
+    // uji double-bind: klik sekali harus benar-benar mengubah type
+    const pwBtn = fd.querySelector('#panel-teks .pw-toggle[data-for="t-password"]');
+    const pwInp = fd.querySelector("#t-password");
+    pwInp.type = "password";
+    pwBtn.click();
+    ok("t4: eye toggle teks berfungsi (sekali klik = show)", pwInp.type === "text", "type=" + pwInp.type);
+    pwBtn.click();
+    ok("t4: eye toggle teks berfungsi (klik ke-2 = hide)", pwInp.type === "password", "type=" + pwInp.type);
+    const pwBtnF = fd.querySelector('#panel-berkas .pw-toggle[data-for="f-password-enc"]');
+    const pwInpF = fd.querySelector("#f-password-enc");
+    pwInpF.type = "password";
+    pwBtnF.click();
+    ok("t4: eye toggle BERKAS berfungsi (bug double-bind teratasi)", pwInpF.type === "text", "type=" + pwInpF.type);
+    pwBtnF.click();
+    ok("t4: eye toggle berkas kembali ke password", pwInpF.type === "password", "type=" + pwInpF.type);
+  } catch (e) {
+    ok("t4: mode toggle checks run", false, e.message);
+  }
+}
+
+/* ---------- G5: Password strength meter ---------- */
+if (has("t5")) {
+  try {
+    const inp = fd.querySelector("#t-password");
+    const meter = fd.querySelector("#t-password-meter");
+    ok("t5: meter ada di bawah input password teks", !!meter);
+    ok("t5: meter juga ada di panel berkas", !!fd.querySelector("#f-password-meter"));
+    const fill = meter.querySelector(".pw-meter-fill");
+    const label = meter.querySelector(".pw-meter-label");
+    const setVal = async (v) => {
+      inp.value = v;
+      inp.dispatchEvent(new Event("input", { bubbles: true }));
+      await sleep(320); // debounce 150ms + margin
+    };
+    await setVal("abc");
+    ok("t5: 'abc' → level Lemah (width ~33%)", /Lemah/.test(label.textContent) && Math.abs(parseFloat(fill.style.width) - 100 / 3) < 0.01, label.textContent + " w=" + fill.style.width);
+    ok("t5: warna lemah = merah", fill.className.includes("weak"), fill.className);
+    ok("t5: checklist len belum tercentang", !meter.querySelector('[data-rule="len"]').classList.contains("ok"));
+    await setVal("abcdefg1");
+    ok("t5: 'abcdefg1' → Cukup (66%)", /Cukup/.test(label.textContent), label.textContent);
+    ok("t5: warna cukup = kuning", fill.className.includes("fair"), fill.className);
+    ok("t5: rule len + num tercentang", meter.querySelector('[data-rule="len"]').classList.contains("ok") && meter.querySelector('[data-rule="num"]').classList.contains("ok"));
+    await setVal("Abcde1!@");
+    ok("t5: 'Abcde1!@' → Kuat (100%)", /Kuat/.test(label.textContent) && fill.style.width === "100%", label.textContent + " w=" + fill.style.width);
+    ok("t5: warna kuat = hijau", fill.className.includes("strong"), fill.className);
+    ok("t5: ketiga rule tercentang", ["len", "num", "sym"].every((r) => meter.querySelector(`[data-rule="${r}"]`).classList.contains("ok")));
+    // meter hanya di password enkripsi: password dekripsi tidak punya meter
+    ok("t5: password dekripsi TIDAK punya meter (sesuai keputusan)", !fd.querySelector("#t-password-dec-meter"));
+    await setVal("");
+  } catch (e) {
+    ok("t5: strength checks run", false, e.message);
+  }
+}
+
+/* ---------- G6: File dropzone preview + validasi + progress ---------- */
+if (has("t6")) {
+  try {
+    const dz = fd.querySelector("#dz-enc");
+    const inp = fd.querySelector("#f-file-enc");
+    const preview = fd.querySelector("#f-file-enc-preview");
+    ok("t6: preview card ada dan awal tersembunyi", !!preview && !preview.classList.contains("has-file"));
+    ok("t6: progress bar ada dan awal tersembunyi", !!fd.querySelector("#f-enc-progress") && fd.querySelector("#f-enc-progress").hidden);
+    ok("t6: tombol Unduh File .krp ada", !!fd.querySelector("#f-enc-download-btn"));
+    // file kecil valid
+    const dt = new DataTransfer();
+    dt.items.add(new File([new Uint8Array(2048)], "foto.png", { type: "image/png" }));
+    inp.files = dt.files;
+    inp.dispatchEvent(new Event("change", { bubbles: true }));
+    await sleep(100);
+    ok("t6: preview menampilkan nama & ukuran", preview.classList.contains("has-file") && preview.querySelector(".file-preview-name").textContent === "foto.png" && /2 KB/.test(preview.querySelector(".file-preview-size").textContent), preview.querySelector(".file-preview-name").textContent + "/" + preview.querySelector(".file-preview-size").textContent);
+    ok("t6: ikon tipe file (file-image) dipilih", preview.querySelector(".file-preview-icon i, .file-preview-icon svg").getAttribute("data-lucide") === "file-image" || preview.innerHTML.includes("file-image"), preview.querySelector(".file-preview-icon").innerHTML.slice(0, 80));
+    // hapus
+    preview.querySelector(".file-preview-remove").click();
+    await sleep(50);
+    ok("t6: tombol hapus mengosongkan pilihan", !preview.classList.contains("has-file") && inp.files.length === 0, "files=" + inp.files.length);
+    // file > 32MB
+    const dtBig = new DataTransfer();
+    dtBig.items.add(new File([new Uint8Array(33 * 1024 * 1024)], "besar.bin", { type: "application/octet-stream" }));
+    inp.files = dtBig.files;
+    inp.dispatchEvent(new Event("change", { bubbles: true }));
+    await sleep(200);
+    ok("t6: file >32MB ditolak (preview tetap kosong)", !preview.classList.contains("has-file"));
+    const toastTxt = [document, fd].flatMap((d) => Array.from(d.querySelectorAll("#toast-root .toast"))).map((t) => t.textContent).join(" | ");
+    ok("t6: toast error 32MB muncul", /32MB/.test(toastTxt), toastTxt.slice(0, 100));
+    // bersihkan toast
+    document.querySelectorAll("#toast-root .toast-close").forEach((b) => b.click());
+    // drag highlight class wiring tetap ada
+    ok("t6: dropzone punya handler drag (class .drag dipakai CSS)", dz.classList.contains("drag") === false); // awal tanpa drag; wiring diverifikasi lewat perilaku drop di bawah
+    const dt2 = new DataTransfer();
+    dt2.items.add(new File([new Uint8Array(10)], "lagi.txt", { type: "text/plain" }));
+    dz.dispatchEvent(new DragEvent("drop", { dataTransfer: dt2, bubbles: true, cancelable: true }));
+    await sleep(100);
+    ok("t6: drop file ke zona → terpilih & preview tampil", preview.classList.contains("has-file") && preview.querySelector(".file-preview-name").textContent === "lagi.txt", preview.querySelector(".file-preview-name").textContent);
+  } catch (e) {
+    ok("t6: dropzone checks run", false, e.message);
+  }
+}
+
+/* ---------- G7: Integrasi teks — spinner, toast, metadata (live API) ---------- */
+if (has("t7")) {
+  try {
+    const meta = fd.querySelector("#t-meta");
+    ok("t7: panel metadata ada dan awal tersembunyi", !!meta && meta.hidden);
+    ok("t7: baris metadata berisi Algoritma/KDF/Waktu", !!fd.querySelector("#t-meta-algo") && !!fd.querySelector("#t-meta-kdf") && !!fd.querySelector("#t-meta-time"));
+    // isi form + enkripsi sungguhan
+    fd.querySelector("#t-plaintext").value = "uji metadata cipherly";
+    fd.querySelector("#t-password").value = "KataSandi1!";
+    const btn = fd.querySelector("#t-encrypt-btn");
+    btn.click();
+    // spinner: class is-loading terpasang selama request
+    await waitFor(() => btn.classList.contains("is-loading"), 2000);
+    ok("t7: tombol masuk state loading (is-loading + disabled)", btn.classList.contains("is-loading") && btn.disabled, "cls=" + btn.className);
+    const done = await waitFor(() => !btn.disabled && fd.querySelector("#t-ciphertext").value.length > 0, 30000);
+    ok("t7: enkripsi sukses → ciphertext terisi", done, "val=" + fd.querySelector("#t-ciphertext").value.slice(0, 20));
+    ok("t7: metadata terisi (algo/kdf/waktu)", !meta.hidden && /aes-gcm/.test(fd.querySelector("#t-meta-algo").textContent) && fd.querySelector("#t-meta-time").textContent.includes("ms"), fd.querySelector("#t-meta-algo").textContent + "/" + fd.querySelector("#t-meta-time").textContent);
+    const toastTxt = [document, fd].flatMap((d) => Array.from(d.querySelectorAll("#toast-root .toast"))).map((t) => t.textContent).join(" | ");
+    ok("t7: toast sukses enkripsi muncul", /berhasil dikunci/i.test(toastTxt), toastTxt.slice(0, 80));
+    // salin hasil
+    const copyBtn = fd.querySelector("#t-copy-btn");
+    copyBtn.click();
+    await sleep(600);
+    ok("t7: tombol salin → 'Tersalin!'", /Tersalin/.test(copyBtn.textContent), copyBtn.textContent);
+    // dekripsi salah password → jalur error selamat dari restrukturisasi
+    fd.querySelector('input[name="t-mode"][value="decrypt"]').click();
+    await sleep(50);
+    fd.querySelector("#t-ciphertext-dec").value = fd.querySelector("#t-ciphertext").value;
+    fd.querySelector("#t-password-dec").value = "SalahSekali1!";
+    fd.querySelector("#t-decrypt-btn").click();
+    const errShown = await waitFor(() => fd.querySelector("#t-result-dec").className.includes("err"), 30000);
+    ok("t7: dekripsi password salah → kotak error merah tampil", errShown, fd.querySelector("#t-result-dec").className);
+    const toastTxt2 = [document, fd].flatMap((d) => Array.from(d.querySelectorAll("#toast-root .toast"))).map((t) => t.textContent).join(" | ");
+    ok("t7: toast error dekripsi muncul", toastTxt2.length > 0, toastTxt2.slice(0, 80));
+    // dekripsi benar
+    fd.querySelector("#t-password-dec").value = "KataSandi1!";
+    fd.querySelector("#t-decrypt-btn").click();
+    const okShown = await waitFor(() => fd.querySelector("#t-result-dec").className.includes("ok"), 30000);
+    ok("t7: dekripsi benar → pesan asli tampil", okShown && /uji metadata cipherly/.test(fd.querySelector("#t-result-dec").textContent), fd.querySelector("#t-result-dec").textContent.slice(0, 80));
+    // bersihkan
+    document.querySelectorAll("#toast-root .toast-close").forEach((b) => b.click());
+    fd.querySelector('input[name="t-mode"][value="encrypt"]').click();
+  } catch (e) {
+    ok("t7: integration checks run", false, e.message);
+  }
+}
+
+/* ---------- G8: Aksesibilitas + performa ---------- */
+if (has("t8")) {
+  try {
+    const noAria = [];
+    fd.querySelectorAll(".btn, .pw-toggle, .file-preview-remove, .toast-close").forEach((b) => {
+      if (!b.textContent.trim() && !b.getAttribute("aria-label")) noAria.push(b.id || b.className);
+    });
+    ok("t8: semua tombol ikon-only punya aria-label", noAria.length === 0, noAria.join(","));
+    ok("t8: mode toggle punya legend sr-only", !!fd.querySelector("#t-mode legend.sr-only"));
+    ok("t8: fieldset settings punya legend sr-only", !!fd.querySelector("#t-settings legend.sr-only"));
+    const statusBoxes = fd.querySelectorAll('[role="status"], [role="alert"]');
+    ok("t8: kotak status pakai role + aria-live", statusBoxes.length >= 4, "count=" + statusBoxes.length);
+    ok("t8: ikon dekoratif di sebelah teks diberi aria-hidden", Array.from(fd.querySelectorAll("h2 svg, .settings-title svg")).every((s) => s.getAttribute("aria-hidden") === "true" || s.parentElement.tagName !== "H2"));
+    // reduced-motion ada di CSS (cek file via fetch)
+    const css = await (await fetch("/static/css/components.css")).text();
+    ok("t8: prefers-reduced-motion hadir di CSS", /prefers-reduced-motion:\s*reduce/.test(css));
+    ok("t8: spinner loading di CSS", /\.btn\.is-loading::before/.test(css));
+    ok("t8: min-height anti layout-shift di CSS", /#panel-teks \.result-box/.test(css));
+    ok("t8: debounce pada strength meter", await (await fetch("/static/js/password_strength.js")).text().then((t) => /setTimeout\(render,\s*150\)/.test(t)));
+  } catch (e) {
+    ok("t8: a11y checks run", false, e.message);
+  }
+}
+
+/* ---------- G9: Tab lain + responsive (instruksi §9) ---------- */
+if (has("t9")) {
+  try {
+    const tabs = [
+      ["teks", "#panel-teks"],
+      ["berkas", "#panel-berkas"],
+      ["demo", "#panel-demo"],
+      ["analisis", "#panel-analisis"],
+      ["hibrida", "#panel-hibrida"],
+    ];
+    for (const [name, sel] of tabs) {
+      fd.querySelector(`#tabs .tab[data-tab="${name}"]`).click();
+      await sleep(60);
+      const panel = fd.querySelector(sel);
+      ok(`t9: tab ${name} → panel aktif`, panel.classList.contains("active"), sel);
+    }
+    ok("t9: panel demo punya tombol run", !!fd.querySelector("#d-run-btn"));
+    ok("t9: panel analisis punya tombol run", !!fd.querySelector("#a-run-btn"));
+    ok("t9: panel hibrida punya tombol genkeys", !!fd.querySelector("#h-genkeys-btn"));
+    // kembali ke teks
+    fd.querySelector('#tabs .tab[data-tab="teks"]').click();
+    await sleep(60);
+    // responsive: ukur overflow horizontal di 1440 & 768
+    const checkOverflow = async (w) => {
+      frameEl.style.width = w + "px";
+      await sleep(150);
+      const de = fd.documentElement;
+      return { scroll: de.scrollWidth, client: de.clientWidth, ok: de.scrollWidth <= de.clientWidth + 2 };
+    };
+    const w1440 = await checkOverflow(1440);
+    ok("t9: 1440px tanpa overflow horizontal", w1440.ok, `scroll=${w1440.scroll} client=${w1440.client}`);
+    const w768 = await checkOverflow(768);
+    ok("t9: 768px tanpa overflow horizontal", w768.ok, `scroll=${w768.scroll} client=${w768.client}`);
+    if (!w768.ok) {
+      const probeSel = [".shell", ".side", ".content", "#tabs", ".side-note", "#breadcrumb-current", "#panel-teks", "#t-mode", "#t-settings", ".grid.two", "#t-meta", ".pw-meter", ".mode-toggle .mode-opt"];
+      const mins = probeSel.map((s) => {
+        const el = fd.querySelector(s);
+        if (!el) return s + "=none";
+        const old = el.style.width;
+        el.style.width = "min-content";
+        const w = Math.round(el.getBoundingClientRect().width);
+        el.style.width = old;
+        return s + "=" + w;
+      });
+      ok("t9: 768 min-content probes", false, mins.join(" "));
+    }
+    frameEl.style.width = "1280px";
+    await sleep(100);
+  } catch (e) {
+    ok("t9: tabs/responsive checks run", false, e.message);
+  }
+}
+
+/* ---------- Selesai ---------- */
+const failed = results.filter((r) => !r.pass);
+document.getElementById("results").textContent = JSON.stringify({ total: results.length, failed: failed.length, results });
+</script>
+</body>
+</html>

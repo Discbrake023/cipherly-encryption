@@ -11,6 +11,11 @@
   padding: 0;
 }
 
+/* Atribut hidden harus selalu menang (menimpa display:flex/inline-flex dari class) */
+[hidden] {
+  display: none !important;
+}
+
 html {
   color-scheme: dark;
   scroll-behavior: smooth;

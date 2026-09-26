@@ -4,6 +4,22 @@
  */
 import { postJSON } from "./api.js";
 import { icon, refreshIcons } from "./icons.js";
+import { showToast } from "./toast.js";
+
+function renderMeta(data) {
+  const set = (id, v) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = v;
+  };
+  set("t-meta-algo", data.meta.algorithm);
+  set("t-meta-kdf", data.meta.kdf);
+  set("t-meta-time", data.elapsed_ms + " ms");
+  set("t-meta-salt", data.meta.salt_hex.slice(0, 16) + "…");
+  set("t-meta-nonce", data.meta.nonce_hex);
+  const panel = document.getElementById("t-meta");
+  if (panel) panel.hidden = false;
+  refreshIcons();
+}
 
 function setLoading(btn, on, label) {
   if (!btn) return;
@@ -30,19 +46,41 @@ export function initTextPanel() {
   const copyBtn = document.getElementById("t-copy-btn");
   if (!encryptBtn) return;
 
-  // Mode toggle
-  const encView = document.getElementById("t-encrypt-view");
-  const decView = document.getElementById("t-decrypt-view");
-  document.querySelectorAll('input[name="t-mode"]').forEach((r) => {
-    r.addEventListener("change", () => {
-      const dec = document.querySelector('input[name="t-mode"]:checked')?.value === "decrypt";
-      if (encView) encView.hidden = dec;
-      if (decView) decView.hidden = !dec;
-    });
-  });
+  // State mode — memengaruhi seluruh render ulang label/panel (instruksi §1)
+  let mode = "encrypt";
 
-  // Show/hide password
-  document.querySelectorAll(".pw-toggle").forEach((b) => {
+  function applyMode(next) {
+    mode = next === true || next === "decrypt" ? "decrypt" : "encrypt";
+    const dec = mode === "decrypt";
+    const set = (id, show) => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    };
+    const title = document.getElementById("t-left-title");
+    if (title) title.textContent = dec ? "Ciphertext" : "Pesan Asli";
+    const rtitle = document.getElementById("t-right-title");
+    if (rtitle) rtitle.textContent = dec ? "Pesan Terbuka" : "Hasil Terkunci";
+    set("t-in-enc", !dec);
+    set("t-in-dec", dec);
+    set("t-out-enc", !dec);
+    set("t-out-dec", dec);
+    set("t-settings", !dec); // sembunyikan pengaturan saat dekripsi (instruksi §1)
+    set("t-encrypt-btn", !dec);
+    set("t-decrypt-btn", dec);
+  }
+
+  // Satu listener di fieldset — baca state `checked` terkini sehingga tahan
+  // terhadap urutan event uncheck/check dua radio (change bisa dobel).
+  const modeFs = document.getElementById("t-mode");
+  modeFs?.addEventListener("change", () => {
+    const dec = !!document.querySelector('input[name="t-mode"][value="decrypt"]')?.checked;
+    applyMode(dec);
+  });
+  applyMode(false); // render awal konsisten dengan radio "encrypt" yang checked
+
+  // Show/hide password — scoped ke panel teks (perbaikan double-bind: sebelumnya
+  // selector global membuat tombol mata panel berkas ter-bind dua kali → no-op)
+  document.querySelectorAll("#panel-teks .pw-toggle").forEach((b) => {
     b.addEventListener("click", () => {
       const inp = document.getElementById(b.dataset.for);
       if (!inp) return;
@@ -66,7 +104,6 @@ export function initTextPanel() {
 
   encryptBtn.addEventListener("click", async () => {
     const box = document.getElementById("t-result");
-    const metaBox = document.getElementById("t-meta");
     const ciphertextInput = document.getElementById("t-ciphertext");
     fieldErr("t-password-err", "");
     fieldErr("t-plaintext-err", "");
@@ -80,23 +117,24 @@ export function initTextPanel() {
     setLoading(encryptBtn, true, "Mengunci...");
 
     try {
+      // Card selector algoritma (instruksi §2): radio, bukan <select>
+      const algo = document.querySelector('input[name="t-algo"]:checked')?.value || "aes-gcm";
       const data = await postJSON("/api/encrypt/text", {
         plaintext,
         password,
-        algorithm: document.getElementById("t-algo").value,
+        algorithm: algo,
         kdf: document.getElementById("t-kdf").value,
         encoding: document.getElementById("t-encoding").value,
       });
       ciphertextInput.value = data.envelope;
-      metaBox.textContent =
-        `algoritma=${data.meta.algorithm}  kdf=${data.meta.kdf}  ` +
-        `salt=${data.meta.salt_hex.slice(0, 12)}...  nonce=${data.meta.nonce_hex}  ` +
-        `waktu=${data.elapsed_ms} ms`;
+      renderMeta(data);
       box.textContent = "Berhasil dikunci. Salin hasil di samping.";
       box.className = "result-box ok";
+      showToast("Pesan berhasil dikunci.", "success");
     } catch (e) {
       box.textContent = "Gagal mengunci: " + e.message + " — cek pesan & kata sandi, coba lagi.";
       box.className = "result-box err";
+      showToast("Gagal mengunci: " + e.message, "error");
     } finally {
       setLoading(encryptBtn, false);
     }
@@ -117,9 +155,11 @@ export function initTextPanel() {
       });
       box.textContent = `Pesan asli: ${data.plaintext}\n(waktu buka: ${data.elapsed_ms} ms)`;
       box.className = "result-box ok";
+      showToast("Pesan berhasil dibuka.", "success");
     } catch (e) {
       box.textContent = "Ditolak: " + e.message + " — biasanya kata sandi salah atau hasil ditempel tidak lengkap.";
       box.className = "result-box err";
+      showToast(e.message, "error");
     } finally {
       setLoading(decryptBtn, false);
     }
