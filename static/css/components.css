@@ -70,6 +70,18 @@
   border-color: var(--text-secondary);
 }
 
+.btn.outline {
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn.outline:hover {
+  background-color: var(--primary-subtle);
+  border-color: var(--primary-hover);
+  color: var(--primary-hover);
+}
+
 .btn.ghost {
   background-color: transparent;
   border: 1px solid transparent;
@@ -591,6 +603,92 @@ select option:checked {
   gap: var(--space-2);
 }
 
+.banner.info {
+  background-color: var(--info-subtle);
+  border: 1px solid var(--info-border);
+  color: var(--info);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ---------- Textarea dengan tombol salin ikon (pojok kanan atas) ---------- */
+.ta-wrap {
+  position: relative;
+  display: block;
+}
+
+.ta-wrap textarea {
+  padding-right: 42px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  min-height: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.copy-btn svg.lucide {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.copy-btn:hover {
+  background-color: var(--surface-4);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.copy-btn.copied {
+  color: var(--primary);
+  background-color: var(--primary-subtle);
+  border-color: var(--primary-border);
+}
+
+.copy-btn.copied:hover {
+  color: var(--primary);
+  background-color: var(--primary-subtle);
+  border-color: var(--primary-border);
+}
+
+/* ---------- Kartu metadata envelope (Langkah 2 hibrida) ---------- */
+.envelope-meta {
+  margin-top: var(--space-3);
+  padding: 10px 14px;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.envelope-meta b {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
 .meta-row {
   font-family: var(--font-mono);
   font-size: 11.5px;
@@ -739,6 +837,45 @@ select option:checked {
   transform-origin: left;
   transform: scaleX(0);
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-status {
+  margin-top: var(--space-2);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 18px;
+}
+
+/* Validasi real-time demo: highlight merah area berkas uji
+   (input#d-file kini hidden — dropzone ikut ditandai supaya terlihat) */
+input[type="file"].invalid {
+  border: 2px solid var(--error);
+  background-color: var(--error-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+}
+
+.dropzone.invalid {
+  border: 1px solid var(--error);
+  border-style: solid;
+  background-color: var(--error-subtle);
+}
+
+/* Badge status sumber kunci publik (Hibrida Langkah 2) */
+.key-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  background-color: var(--success-subtle);
+  border: 1px solid var(--success-border);
+  color: var(--success);
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 /* ---------- Accordion / Details Component ---------- */

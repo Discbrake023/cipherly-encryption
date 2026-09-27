@@ -52,4 +52,14 @@ export function initTabs() {
       }
     });
   });
+
+  // Deep-link: buka tab sesuai hash URL (mis. /app#hibrida)
+  function activateByHash() {
+    const key = location.hash.replace("#", "");
+    if (!key) return;
+    const btn = tabs.find((t) => t.dataset.tab === key);
+    if (btn) activate(btn);
+  }
+  activateByHash();
+  window.addEventListener("hashchange", activateByHash);
 }

@@ -15,78 +15,165 @@
                 Hapus Kunci Dari Layar
             </button>
         </div>
-        <p class="warning banner" id="h-warning" role="alert"><i data-lucide="triangle-alert" class="inline-icon"></i> Demo saja: kunci privat hanya di memori browser, jangan pakai data asli.</p>
+        <p class="banner info" id="h-warning" role="status">
+            <i data-lucide="lightbulb" class="inline-icon" aria-hidden="true"></i>
+            Mode Demo: Kunci disimpan sementara di browser Anda. Jangan gunakan untuk data
+            sensitif nyata. Refresh halaman akan mempertahankan kunci sampai Anda menutup tab.
+        </p>
         <div class="grid two" style="margin-top: 1rem">
             <label
                 >Kunci Publik (bagikan ke pengirim)
-                <textarea
-                    id="h-public"
-                    rows="6"
-                    placeholder="Klik Buat Kunci dulu..."
-                    readonly
-                    spellcheck="false"
-                ></textarea>
-                <span class="btn-row"><button class="btn ghost" id="h-copy-pub" type="button">Salin Publik</button></span>
+                <span class="ta-wrap">
+                    <textarea
+                        id="h-public"
+                        rows="6"
+                        placeholder="Klik Buat Kunci dulu..."
+                        readonly
+                        spellcheck="false"
+                    ></textarea>
+                    <button
+                        class="btn copy-btn"
+                        id="h-copy-pub"
+                        type="button"
+                        aria-label="Salin kunci publik"
+                        title="Salin kunci publik"
+                    >
+                        <i data-lucide="copy" aria-hidden="true"></i>
+                    </button>
+                </span>
             </label>
             <label
                 >Kunci Privat (rahasia, jangan dibagikan)
-                <textarea
-                    id="h-private"
-                    rows="6"
-                    placeholder="Hanya muncul sementara..."
-                    readonly
-                    autocomplete="off"
-                    spellcheck="false"
-                ></textarea>
-                <span class="btn-row"><button class="btn ghost" id="h-copy-priv" type="button">Salin Privat</button></span>
+                <span class="ta-wrap">
+                    <textarea
+                        id="h-private"
+                        rows="6"
+                        placeholder="Hanya muncul sementara..."
+                        readonly
+                        autocomplete="off"
+                        spellcheck="false"
+                    ></textarea>
+                    <button
+                        class="btn copy-btn"
+                        id="h-copy-priv"
+                        type="button"
+                        aria-label="Salin kunci privat"
+                        title="Salin kunci privat"
+                    >
+                        <i data-lucide="copy" aria-hidden="true"></i>
+                    </button>
+                </span>
             </label>
         </div>
     </div>
 
-    <div class="grid two">
-        <div class="card">
-            <h2>Langkah 2 — Kunci Pesan (Pengirim)</h2>
-            <label
-                >Pesan Rahasia
-                <textarea
-                    id="h-plaintext"
-                    rows="4"
-                    placeholder="Tulis pesan rahasia..."
-                ></textarea>
-            </label>
-            <div class="btn-row">
-                <button class="btn primary" id="h-encrypt-btn">
-                    Enkripsi Hibrida &rarr;
+    <div class="card" style="margin-top: 1rem">
+        <h2>Langkah 2 — Kunci Pesan (Pengirim)</h2>
+        <div class="grid two">
+            <div>
+                <label>Pesan Rahasia
+                    <textarea
+                        id="h-plaintext"
+                        rows="4"
+                        placeholder="Tulis pesan rahasia..."
+                    ></textarea>
+                </label>
+                <div class="key-badge" id="h-key-badge" role="status">
+                    <i data-lucide="badge-check" class="inline-icon" aria-hidden="true"></i>
+                    Menggunakan Kunci Publik Aktif dari Langkah 1
+                </div>
+                <button class="btn ghost" id="h-other-pub-toggle" type="button">
+                    Tempel kunci publik lain
                 </button>
+                <label id="h-other-pub-wrap" hidden
+                    >Kunci Publik Lain (tempel di sini)
+                    <textarea
+                        id="h-pubkey-other"
+                        rows="4"
+                        placeholder="-----BEGIN PUBLIC KEY-----"
+                        spellcheck="false"
+                    ></textarea>
+                </label>
+                <input type="hidden" id="h-pub-active" autocomplete="off" />
+                <div class="btn-row">
+                    <button class="btn primary" id="h-encrypt-btn">
+                        Enkripsi Hibrida &rarr;
+                    </button>
+                </div>
             </div>
-            <label style="margin-top: 1rem"
+            <div>
+                <label class="label-with-info"
+                    >Envelope Hibrida (Base64)
+                    <span
+                        class="label-inline"
+                        data-tippy-content="Struktur KRPH: [Header RSA] [Wrapped Key] [Nonce] [Ciphertext AES] — kunci sesi AES dibungkus RSA, lalu data dienkripsi AES-GCM."
+                        ><i data-lucide="info" class="info-icon" aria-label="Struktur envelope KRPH"></i
+                    ></span>
+                    <textarea
+                        id="h-envelope"
+                        rows="7"
+                        placeholder="Hasil envelope hibrida..."
+                    ></textarea>
+                </label>
+                <div id="h-envelope-meta" class="envelope-meta" hidden>
+                    <span>📏 Ukuran Ciphertext: <b id="h-meta-ct">–</b> bytes</span>
+                    <span>🔑 Wrapped Key Size: <b id="h-meta-wk">–</b> bytes (RSA-2048)</span>
+                    <span>⏱️ Waktu Enkripsi: <b id="h-meta-ms">–</b> ms</span>
+                    <span
+                        class="label-inline"
+                        data-tippy-content="Envelope berisi kunci sesi yang dibungkus RSA + data terenkripsi AES"
+                        ><i data-lucide="info" class="info-icon" aria-label="Penjelasan envelope"></i
+                    ></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 1rem">
+        <h2>Langkah 3 — Buka Pesan (Penerima)</h2>
+        <div class="grid two">
+            <label
                 >Envelope Hibrida (Base64)
                 <textarea
-                    id="h-envelope"
-                    rows="4"
-                    placeholder="Hasil envelope hibrida..."
+                    id="h-dec-envelope"
+                    rows="7"
+                    placeholder="Otomatis terisi dari Langkah 2, atau tempel manual..."
                 ></textarea>
             </label>
-        </div>
-
-        <div class="card">
-            <h2>Langkah 3 — Buka Pesan (Penerima)</h2>
-            <p
-                style="
-                    margin-bottom: 1rem;
-                    font-size: 13px;
-                    color: var(--neutral);
-                "
-            >
-                Dekripsi menggunakan kunci privat yang tersimpan atau dimasukkan
-                di atas.
-            </p>
-            <div class="btn-row">
-                <button class="btn secondary" id="h-decrypt-btn">
-                    &larr; Dekripsi Hibrida
-                </button>
+            <div>
+                <label
+                    >Kunci Privat
+                    <textarea
+                        id="h-dec-private"
+                        rows="7"
+                        readonly
+                        placeholder="Otomatis terisi dari Langkah 1, atau tempel kunci privat RSA lain..."
+                        autocomplete="off"
+                        spellcheck="false"
+                    ></textarea>
+                </label>
+                <div class="btn-row">
+                    <button class="btn ghost" id="h-toggle-priv" type="button">
+                        Ganti Kunci Privat
+                    </button>
+                </div>
+                <label id="h-other-priv-wrap" hidden
+                    >Kunci Privat Lain (tempel di sini)
+                    <textarea
+                        id="h-dec-priv-other"
+                        rows="6"
+                        placeholder="-----BEGIN PRIVATE KEY-----"
+                        autocomplete="off"
+                        spellcheck="false"
+                    ></textarea>
+                </label>
             </div>
-            <div id="h-result" class="result-box"></div>
         </div>
+        <div class="btn-row" style="margin-top: 0.5rem">
+            <button class="btn primary" id="h-decrypt-btn" disabled>
+                &larr; Dekripsi Hibrida
+            </button>
+        </div>
+        <div id="h-result" class="result-box"></div>
     </div>
 </section>

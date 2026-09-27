@@ -62,7 +62,28 @@ tugas-kripto/
 
 ## Cara Instalasi
 
-Membutuhkan **Python 3.10+**.
+Membutuhkan **Python 3.10+** (dikembangkan dengan Python 3.12).
+
+### Windows (PowerShell)
+
+```powershell
+# 1. Clone repositori
+git clone <url-repositori-anda>
+cd tugas-kripto
+
+# 2. (Disarankan) buat virtual environment
+py -3.12 -m venv venv
+venv\Scripts\Activate.ps1
+
+# 3. Pasang dependensi
+pip install -r requirements.txt
+```
+
+> Jika `Activate.ps1` diblokir kebijakan eksekusi, jalankan dulu
+> `Set-ExecutionPolicy -Scope Process RemoteSigned`, atau pakai Command
+> Prompt: `venv\Scripts\activate.bat`.
+
+### Linux / macOS
 
 ```bash
 # 1. Clone repositori
@@ -71,7 +92,7 @@ cd tugas-kripto
 
 # 2. (Disarankan) buat virtual environment
 python3 -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate
 
 # 3. Pasang dependensi
 pip install -r requirements.txt
@@ -79,8 +100,19 @@ pip install -r requirements.txt
 
 ## Cara Menjalankan Aplikasi
 
+### Windows (PowerShell)
+
+```powershell
+py -3.12 app.py
+```
+
+> Jika `py` tidak tersedia, pakai `python app.py` (asalkan Python sudah
+> ada di PATH).
+
+### Linux / macOS
+
 ```bash
-python app.py
+python3 app.py
 ```
 
 Buka **http://127.0.0.1:5000** di browser. Antarmuka memiliki 5 tab:
@@ -95,18 +127,56 @@ Buka **http://127.0.0.1:5000** di browser. Antarmuka memiliki 5 tab:
 5. **Hibrida (RSA + AES)** &mdash; demonstrasi enkripsi hibrida (fitur
    pengayaan).
 
+### Hot Reload (pengembangan lokal)
+
+Hot reload **aktif secara default** saat dijalankan lewat `app.py`
+(`FLASK_DEBUG=1`):
+
+- **File Python (`.py`)** &mdash; server restart otomatis (Werkzeug reloader).
+- **Template (`templates/*.html`)** &mdash; Jinja reload otomatis, lalu
+  browser me-refresh halaman sendiri.
+- **CSS/JS (`static/`)** &mdash; browser me-refresh halaman otomatis tiap
+  2 detik lewat endpoint dev `/__dev/version` (hanya ada saat debug).
+
+Mematikan hot reload (misalnya saat ingin server statis):
+
+```powershell
+# Windows
+$env:FLASK_DEBUG="0"; py -3.12 app.py
+```
+
+```bash
+# Linux / macOS
+FLASK_DEBUG=0 python3 app.py
+```
+
+> Endpoint `/__dev/version` dan skrip auto-refresh **tidak dirender** saat
+> `FLASK_DEBUG=0` maupun di deployment produksi (Vercel), sehingga aman.
+
 ## Cara Menjalankan Pengujian
 
 ### Unit test
 
+```powershell
+# Windows
+py -3.12 -m pytest -v
+```
+
 ```bash
-pytest -v
+# Linux / macOS
+python3 -m pytest -v
 ```
 
 ### Pengujian menyeluruh (menghasilkan data untuk laporan)
 
+```powershell
+# Windows
+py -3.12 -m testing.benchmark
+```
+
 ```bash
-python -m testing.benchmark
+# Linux / macOS
+python3 -m testing.benchmark
 ```
 
 Hasilnya akan tersimpan di folder `laporan/`:

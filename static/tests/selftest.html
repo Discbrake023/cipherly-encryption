@@ -320,6 +320,21 @@ if (has("t9")) {
       ok(`t9: tab ${name} → panel aktif`, panel.classList.contains("active"), sel);
     }
     ok("t9: panel demo punya tombol run", !!fd.querySelector("#d-run-btn"));
+    ok("t9: progress bar + status teks demo ada", !!fd.querySelector("#d-progress") && !!fd.querySelector("#d-progress-status"));
+    // Validasi real-time: klik tanpa berkas → highlight merah + toast, request TIDAK terkirim
+    fd.querySelector('#tabs .tab[data-tab="demo"]').click();
+    await sleep(60);
+    fd.querySelector("#d-run-btn").click();
+    await sleep(150);
+    const demoToast = [document, fd].flatMap((d) => Array.from(d.querySelectorAll("#toast-root .toast"))).map((t) => t.textContent).join(" | ");
+    ok("t9: demo tanpa berkas → input invalid + toast error", fd.querySelector("#d-file").classList.contains("invalid") && fd.querySelector("#d-file-err").textContent.length > 0 && /berkas uji/i.test(demoToast), demoToast.slice(0, 90));
+    const dtDemo = new DataTransfer();
+    dtDemo.items.add(new File([new Uint8Array(64)], "uji.txt", { type: "text/plain" }));
+    fd.querySelector("#d-file").files = dtDemo.files;
+    fd.querySelector("#d-file").dispatchEvent(new Event("change", { bubbles: true }));
+    await sleep(60);
+    ok("t9: pilih berkas → highlight merah hilang", !fd.querySelector("#d-file").classList.contains("invalid") && fd.querySelector("#d-file-err").textContent === "");
+    document.querySelectorAll("#toast-root .toast-close").forEach((b) => b.click());
     ok("t9: panel analisis punya tombol run", !!fd.querySelector("#a-run-btn"));
     ok("t9: panel hibrida punya tombol genkeys", !!fd.querySelector("#h-genkeys-btn"));
     // kembali ke teks
@@ -353,6 +368,75 @@ if (has("t9")) {
     await sleep(100);
   } catch (e) {
     ok("t9: tabs/responsive checks run", false, e.message);
+  }
+}
+
+/* ---------- G10: Hibrida — state kunci, sessionStorage, metadata envelope ---------- */
+if (has("t10")) {
+  try {
+    const $ = (s) => frameEl.contentDocument.querySelector(s);
+    fd.querySelector('#tabs .tab[data-tab="hibrida"]').click();
+    await sleep(60);
+
+    ok("t10: badge kunci publik aktif statis (dropdown dihapus)", !!$("#h-key-badge") && !$("#h-key-source") && /Kunci Publik Aktif dari Langkah 1/.test($("#h-key-badge").textContent));
+    ok("t10: tombol tempel kunci publik lain ada", !!$("#h-other-pub-toggle") && $("#h-other-pub-wrap").hidden === true);
+    ok("t10: input hidden kunci publik aktif ada", !!$("#h-pub-active"));
+    ok("t10: kolom langkah 3 envelope + kunci privat", !!$("#h-dec-envelope") && !!$("#h-dec-private") && !!$("#h-dec-priv-other"));
+    ok("t10: placeholder kunci privat langkah 3", /Otomatis terisi dari Langkah 1/.test($("#h-dec-private").placeholder), $("#h-dec-private").placeholder);
+    ok("t10: tooltip struktur envelope KRPH ada", (() => { const t = $("#h-envelope")?.closest("label")?.querySelector("[data-tippy-content]"); return !!t && /\[Wrapped Key\]/.test(t.getAttribute("data-tippy-content")); })());
+    ok("t10: dekripsi disabled saat input kosong", $("#h-decrypt-btn").disabled === true);
+    ok("t10: copy berupa ikon button + aria-label", (() => { const b = $("#h-copy-pub"); return b && b.tagName === "BUTTON" && !!b.getAttribute("aria-label") && !b.textContent.trim(); })());
+    ok("t10: banner mode demo = info biru", $("#h-warning").classList.contains("info"));
+
+    // Buat kunci → variabel global + sessionStorage
+    $("#h-genkeys-btn").click();
+    await waitFor(() => fw.currentPublicKey && fw.currentPublicKey.includes("BEGIN PUBLIC KEY"), 10000);
+    ok("t10: window.currentPublicKey terisi", fw.currentPublicKey.includes("BEGIN PUBLIC KEY"));
+    ok("t10: window.currentPrivateKey terisi", fw.currentPrivateKey.includes("BEGIN PRIVATE KEY"));
+    ok("t10: sessionStorage menyimpan kedua kunci", !!fw.sessionStorage.getItem("cipherly.hybrid.publicKey") && !!fw.sessionStorage.getItem("cipherly.hybrid.privateKey"));
+    ok("t10: input kunci aktif auto-terisi", $("#h-pub-active").value.includes("BEGIN PUBLIC KEY"));
+
+    // Tombol "Tempel kunci publik lain" menampilkan textarea
+    $("#h-other-pub-toggle").click();
+    ok("t10: toggle kunci lain membuka textarea", $("#h-other-pub-wrap").hidden === false);
+    $("#h-other-pub-toggle").click();
+    ok("t10: toggle menutup textarea kunci lain", $("#h-other-pub-wrap").hidden === true);
+
+    // Enkripsi → envelope + metadata + auto-fill langkah 3
+    $("#h-plaintext").value = "tes pesan hibrida";
+    $("#h-encrypt-btn").click();
+    await waitFor(() => { const v = $("#h-envelope").value; return v && v.length > 40 && !v.startsWith("Gagal"); }, 15000);
+    const envVal = $("#h-envelope").value;
+    ok("t10: envelope terhasil", envVal.length > 40 && !envVal.startsWith("Gagal"), envVal.slice(0, 40));
+    ok("t10: kartu metadata envelope tampil", $("#h-envelope-meta").hidden === false);
+    ok("t10: wrapped key = 256 bytes (RSA-2048)", $("#h-meta-wk").textContent.trim() === "256", $("#h-meta-wk").textContent);
+    ok("t10: ukuran ciphertext > 0 bytes", parseInt($("#h-meta-ct").textContent, 10) > 0, $("#h-meta-ct").textContent);
+    ok("t10: waktu enkripsi >= 1 ms", parseInt($("#h-meta-ms").textContent, 10) >= 1, $("#h-meta-ms").textContent);
+    ok("t10: langkah 3 auto-fill envelope", $("#h-dec-envelope").value === envVal);
+    ok("t10: dekripsi enabled setelah envelope + kunci ada", $("#h-decrypt-btn").disabled === false);
+
+    // Dekripsi hibrida
+    $("#h-decrypt-btn").click();
+    await waitFor(() => /Pesan asli/.test($("#h-result").textContent), 15000);
+    ok("t10: dekripsi hibrida sukses", /Pesan asli: tes pesan hibrida/.test($("#h-result").textContent), $("#h-result").textContent.slice(0, 120));
+
+    // Toggle ganti kunci privat
+    $("#h-toggle-priv").click();
+    ok("t10: textarea ganti kunci privat terbuka", $("#h-other-priv-wrap").hidden === false);
+    $("#h-toggle-priv").click();
+    ok("t10: toggle menutup lagi", $("#h-other-priv-wrap").hidden === true);
+
+    // Restore dari sessionStorage setelah refresh halaman
+    frameEl.contentWindow.location.reload();
+    const restored = await waitFor(() => {
+      const w = frameEl.contentDocument.querySelector("#h-warning");
+      return w && /Kunci sesi sebelumnya ditemukan/.test(w.textContent);
+    }, 15000);
+    ok("t10: banner restore setelah refresh", restored, "warning=" + (frameEl.contentDocument.querySelector("#h-warning")?.textContent.trim().slice(0, 70) || "none"));
+    ok("t10: kunci dipulihkan dari sessionStorage", !!fw.currentPublicKey && fw.currentPublicKey.includes("BEGIN PUBLIC KEY") && frameEl.contentDocument.querySelector("#h-dec-private").value.includes("BEGIN PRIVATE KEY"));
+    ok("t10: dekripsi disabled setelah refresh (envelope tak di-persist)", frameEl.contentDocument.querySelector("#h-decrypt-btn").disabled === true);
+  } catch (e) {
+    ok("t10: hybrid checks run", false, e.message);
   }
 }
 

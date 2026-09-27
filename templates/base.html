@@ -30,5 +30,25 @@
                 if (window.lucide) window.lucide.createIcons();
             });
         </script>
+        {% if config.DEBUG %}
+        <!-- Dev-only (FLASK_DEBUG=1): auto-refresh browser saat template/static berubah -->
+        <script>
+            (function () {
+                var last = null;
+                setInterval(function () {
+                    fetch("/__dev/version", { cache: "no-store" })
+                        .then(function (r) {
+                            return r.ok ? r.text() : null;
+                        })
+                        .then(function (v) {
+                            if (v === null) return;
+                            if (last !== null && v !== last) location.reload();
+                            last = v;
+                        })
+                        .catch(function () {});
+                }, 2000);
+            })();
+        </script>
+        {% endif %}
     </body>
 </html>

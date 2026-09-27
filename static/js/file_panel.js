@@ -26,7 +26,7 @@ function fmtSize(n) {
   return (n / 1024 / 1024).toFixed(2) + " MB";
 }
 
-function wireDropzone(dzId, inputId, previewId) {
+export function wireDropzone(dzId, inputId, previewId) {
   const dz = document.getElementById(dzId);
   const inp = document.getElementById(inputId);
   const preview = document.getElementById(previewId);
