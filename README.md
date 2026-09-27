@@ -143,6 +143,7 @@ Mematikan hot reload (misalnya saat ingin server statis):
 ```powershell
 # Windows
 $env:FLASK_DEBUG="0"; py -3.12 app.py
+$env:FLASK_DEBUG="1"; py -3.12 app.py
 ```
 
 ```bash

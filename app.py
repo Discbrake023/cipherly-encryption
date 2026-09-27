@@ -44,6 +44,10 @@ app = create_app()
 if __name__ == "__main__":
     app.run(
         debug=DEBUG,
+        use_reloader=True,
         port=5000,
         extra_files=watch_files() if DEBUG else None,
     )
+    # Ensure Jinja2 auto-reload for templates
+    app.jinja_env.auto_reload = True
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
