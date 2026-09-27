@@ -2,10 +2,17 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
-testing/
 tests/
-laporan/*.png
-laporan/*.pdf
+# testing/ HARUS ikut ter-deploy: app/routes/analysis.py mengimpor
+# testing.metrics di top-level. Hanya benchmark (dev-only) yang dibuang.
+testing/benchmark.py
+testing/sample_files.py
+laporan/
+docs/
+static/tests/
 sample_data/
+requirements-dev.txt
+run_dev.py
+skills-lock.json
 *.krp
 .DS_Store

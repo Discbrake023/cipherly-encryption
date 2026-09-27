@@ -1,16 +1,21 @@
 """
-app.py - Local dev shim (modular refactor).
+run_dev.py - Local dev shim (modular refactor).
 
 Menjalankan:
-    Windows : py -3.12 app.py
-    Linux   : python3 app.py
+    Windows : py -3.12 run_dev.py
+    Linux   : python3 run_dev.py
 
 Hot reload aktif secara default (FLASK_DEBUG=1):
     - file *.py berubah        -> server restart otomatis (Werkzeug reloader)
     - template/CSS/JS berubah  -> browser reload otomatis (skrip dev di base.html)
 Matikan dengan:
-    Windows : $env:FLASK_DEBUG="0"; py -3.12 app.py
-    Linux   : FLASK_DEBUG=0 python3 app.py
+    Windows : $env:FLASK_DEBUG="0"; py -3.12 run_dev.py
+    Linux   : FLASK_DEBUG=0 python3 run_dev.py
+
+Nama file ini sengaja BUKAN `app.py`: Vercel auto-detect entrypoint Python
+mencari `app.py` di root lebih dulu, sementara `import app` di runtime jatuh
+ke package `app/` (bukan file ini), sehingga deploy Vercel error 500.
+Entry point produksi ada di api/index.py.
 """
 from __future__ import annotations
 

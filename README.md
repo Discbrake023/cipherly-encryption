@@ -44,7 +44,9 @@ Aplikasi menyediakan:
 
 ```
 tugas-kripto/
-├── app.py                  # Backend Flask (routing & API)
+├── run_dev.py              # Shim server dev lokal (hot reload, FLASK_DEBUG=1)
+├── api/index.py            # Entrypoint serverless Vercel (WSGI `app`)
+├── app/                    # Package Flask: factory, config, blueprint routes
 ├── crypto_core.py          # Modul inti kriptografi (AEAD, KDF, hibrida RSA)
 ├── requirements.txt
 ├── templates/index.html    # Antarmuka web (5 tab)
@@ -55,7 +57,8 @@ tugas-kripto/
 │   ├── sample_files.py      # Generator PNG & PDF sintetis untuk uji korektnas
 │   └── benchmark.py         # Skrip pengujian menyeluruh -> laporan/hasil_pengujian.xlsx
 ├── tests/
-│   └── test_crypto_core.py  # Unit test (pytest, 8 test)
+│   ├── test_crypto_core.py  # Unit test fungsi kriptografi (pytest)
+│   └── test_vercel_entrypoint.py  # Guardrail entrypoint deploy Vercel
 ├── sample_data/              # (opsional) taruh berkas gambar/PDF asli di sini
 └── laporan/                  # Keluaran benchmark: xlsx + histogram PNG
 ```
@@ -103,16 +106,16 @@ pip install -r requirements.txt
 ### Windows (PowerShell)
 
 ```powershell
-py -3.12 app.py
+py -3.12 run_dev.py
 ```
 
-> Jika `py` tidak tersedia, pakai `python app.py` (asalkan Python sudah
+> Jika `py` tidak tersedia, pakai `python run_dev.py` (asalkan Python sudah
 > ada di PATH).
 
 ### Linux / macOS
 
 ```bash
-python3 app.py
+python3 run_dev.py
 ```
 
 Buka **http://127.0.0.1:5000** di browser. Antarmuka memiliki 5 tab:
@@ -129,7 +132,7 @@ Buka **http://127.0.0.1:5000** di browser. Antarmuka memiliki 5 tab:
 
 ### Hot Reload (pengembangan lokal)
 
-Hot reload **aktif secara default** saat dijalankan lewat `app.py`
+Hot reload **aktif secara default** saat dijalankan lewat `run_dev.py`
 (`FLASK_DEBUG=1`):
 
 - **File Python (`.py`)** &mdash; server restart otomatis (Werkzeug reloader).
@@ -142,13 +145,13 @@ Mematikan hot reload (misalnya saat ingin server statis):
 
 ```powershell
 # Windows
-$env:FLASK_DEBUG="0"; py -3.12 app.py
-$env:FLASK_DEBUG="1"; py -3.12 app.py
+$env:FLASK_DEBUG="0"; py -3.12 run_dev.py
+$env:FLASK_DEBUG="1"; py -3.12 run_dev.py
 ```
 
 ```bash
 # Linux / macOS
-FLASK_DEBUG=0 python3 app.py
+FLASK_DEBUG=0 python3 run_dev.py
 ```
 
 > Endpoint `/__dev/version` dan skrip auto-refresh **tidak dirender** saat
@@ -191,6 +194,35 @@ Hasilnya akan tersimpan di folder `laporan/`:
 > langsung dijalankan. Untuk hasil yang lebih meyakinkan pada laporan,
 > silakan tambahkan berkas gambar/PDF asli ke folder `sample_data/` sebelum
 > menjalankan `benchmark.py` &mdash; berkas tersebut akan otomatis ikut diuji.
+
+## Deploy ke Vercel (Git Integration)
+
+Proyek sudah dikonfigurasi untuk deploy otomatis lewat Vercel:
+
+- `api/index.py` &mdash; entrypoint serverless yang mengekspor objek WSGI
+  `app` (hasil `create_app()`), sesuai deteksi framework Flask Vercel.
+- `vercel.json` &mdash; me-rewrite semua rute (`/(.*)`) ke `/api/index`,
+  sehingga Flask menangani `/`, `/app`, `/static/*`, dan `/api/*`.
+- `FLASK_DEBUG` tidak pernah di-set di Vercel, jadi route dev
+  `/__dev/version` tidak terdaftar di produksi.
+
+Langkah deploy:
+
+1. Push repo ini ke GitHub.
+2. Buka [vercel.com/new](https://vercel.com/new), impor repositori.
+   Framework &amp; preset terdeteksi otomatis (Flask, Python 3.12 sesuai
+   `.python-version`), tidak perlu mengubah pengaturan build.
+3. Klik **Deploy**; build berikutnya berjalan otomatis tiap push ke `main`.
+
+> **Batasan ukuran unggahan:** Vercel membatasi body request serverless
+> ke **4,5 MB**, sementara `MAX_CONTENT_LENGTH` aplikasi default 32 MB.
+> Atur environment variable `MAX_CONTENT_LENGTH_MB=4` di dashboard Vercel
+> agar Flask menolak berkas besar lebih awal dengan pesan yang jelas.
+
+Guardrail: `tests/test_vercel_entrypoint.py` memastikan auto-detect Vercel
+selalu memilih `api/index.py` dan root tidak memiliki `app.py` yang bisa
+bertabrakan dengan package `app/`. Jalankan `py -3.12 -m pytest -v` sebelum
+push.
 
 ## Contoh Penggunaan (API)
 

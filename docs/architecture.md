@@ -26,7 +26,7 @@ graph TD
         UI --> Style
     end
 
-    subgraph Presentation & Routing Layer ["Flask Server (app.py)"]
+    subgraph Presentation & Routing Layer ["Flask Server (api/index.py)"]
         Router["HTTP Router"]
         APIText["/api/encrypt/text & /api/decrypt/text"]
         APIFile["/api/encrypt/file & /api/decrypt/file"]
@@ -62,7 +62,9 @@ graph TD
 
 ```
 C:\cipherly-encryption\
-├── app.py                     # Entrypoint server Flask & REST API endpoints
+├── run_dev.py                 # Shim server dev lokal (hot reload, FLASK_DEBUG=1)
+├── api/index.py               # Entrypoint serverless Vercel (objek WSGI `app`)
+├── app/                        # Package Flask: create_app, config, blueprint routes
 ├── crypto_core.py             # Engine kriptografi, envelope format, & algoritma
 ├── requirements.txt           # Dependensi (Flask, cryptography, argon2-cffi, dll.)
 ├── README.md                  # Dokumentasi umum proyek
@@ -120,7 +122,7 @@ Sebelumnya, rute `/` langsung menyajikan tab enkripsi teknis. Dengan penambahan 
 sequenceDiagram
     autonumber
     actor User as Pengguna / Browser
-    participant Flask as Flask Server (app.py)
+    participant Flask as Flask Server (api/index.py)
     participant LandingView as Landing Page (landing.html)
     participant AppView as Feature Workspace (app.html)
     participant API as Crypto API (/api/*)
@@ -169,7 +171,7 @@ gantt
     Buat template baru landing.html          :1, 2
     
     section Tahap 2: Backend Routing
-    Update rute / dan /app di app.py         :2, 3
+    Update rute / dan /app di app/routes/views.py         :2, 3
     
     section Tahap 3: Styling & Interaktivitas
     Penerapan Design System (Green Deck)     :3, 4
@@ -180,7 +182,7 @@ gantt
    * Buat `templates/landing.html` dengan desain *Hero*, *Feature Cards*, *Security Highlights*, dan tombol *Call-to-Action*.
    * Rename `templates/index.html` menjadi `templates/app.html` dan tambahkan tombol "Home/Kembali" di sidebar header.
 2. **Langkah 2 (Flask Routing Update)**:
-   * Di `app.py`, ubah route `@app.route("/")` untuk me-render `landing.html`.
+   * Di `app/routes/views.py`, ubah route `@app.route("/")` untuk me-render `landing.html`.
    * Tambahkan `@app.route("/app")` untuk me-render `app.html`.
 3. **Langkah 3 (Verifikasi & QA)**:
    * Pastikan semua link API di `script.js` tetap berfungsi tanpa regresi.
