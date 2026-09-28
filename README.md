@@ -27,7 +27,7 @@ Informasi.
 - [Contoh Penggunaan API](#contoh-penggunaan-api)
 - [Format Envelope `.krp`](#format-envelope-krp)
 - [Keamanan & Batasan](#keamanan--batasan-yang-perlu-diketahui)
-- [Penggunaan Asisten AI](#penggunaan-asisten-ai)
+- [Troubleshooting](#troubleshooting)
 - [Lisensi](#lisensi)
 
 ---
@@ -349,8 +349,10 @@ Setiap hasil enkripsi disimpan sebagai satu blok biner mandiri sehingga
 tidak perlu menyimpan salt/nonce terpisah:
 
 ```
-[ "KRP1" | algo_id(1B) | kdf_id(1B) | kdf_param(4B) |
-  salt_len(1B) | salt | nonce_len(1B) | nonce | ciphertext+tag ]
+──────────┬─────────┬────────┬───────────┬──────────┬───────┬────────┬──────────────┐
+│ Magic(4B)│ Algo(1B)│ KDF(1B)│ Param(4B) │SaltLen(1B)│ Salt  │NonceLen│ Ciphertext+Tag│
+│   KRP1   │ 0=AES   │ 0=PBKDF2│ Big-Endian│    16     │ 16B   │  12    │  AEAD Output  │
+└──────────┴─────────┴────────┴───────────┴──────────┴───────┴────────┴──────────────┘
 ```
 
 Dekripsi akan **ditolak** bila:
@@ -369,6 +371,22 @@ Dekripsi akan **ditolak** bila:
   `crypto_core.py` (`*_DEFAULT`).
 - Aplikasi ini adalah proyek tugas kuliah untuk tujuan pembelajaran, bukan
   produk yang telah diaudit keamanannya secara independen.
+
+---
+
+## Troubleshooting
+
+**Error: `ModuleNotFoundError: No module named 'cryptography'`**  
+- Pastikan virtual environment aktif: `source venv/bin/activate` (Linux/Mac) atau `venv\Scripts\activate` (Windows).
+
+**Blank page setelah deploy ke Vercel**  
+- Hard refresh browser (`Ctrl+Shift+R`). Jika masih blank, cek Build Logs di dashboard Vercel. Pastikan route `/static/(.*)` berada **DI ATAS** route wildcard di `vercel.json`.
+
+**Unit test gagal**  
+- Pastikan Python ≥ 3.12 dan semua dependensi terinstall: `pip install -r requirements-dev.txt`.
+
+**File `.krp` tidak bisa didekripsi**  
+- Pastikan password identik persis (*case-sensitive*). Envelope KRP1 menyimpan salt & nonce asli, sehingga dekripsi hanya berhasil jika password sama **DAN** ciphertext tidak diubah 1 bit pun.
 
 ---
 
