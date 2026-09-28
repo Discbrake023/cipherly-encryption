@@ -1,16 +1,43 @@
-# Cipherly &mdash; Aplikasi Enkripsi Modern (Topik A)
+# Cipherly &mdash; Aplikasi Enkripsi Modern
+
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Cryptography](https://img.shields.io/badge/Cryptography-AES--256--GCM%20%2F%20ChaCha20--Poly1305-1F2D3D?logo=python&logoColor=white)](https://cryptography.io/)
+[![Vercel](https://img.shields.io/badge/Vercel-Deploy-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![License](https://img.shields.io/badge/License-Educational-blue.svg)](LICENSE)
 
 Aplikasi web untuk mengenkripsi dan mendekripsi teks maupun berkas memakai
 algoritma kriptografi modern **AES-256-GCM** dan **ChaCha20-Poly1305**,
 dibuat untuk Tugas Proyek Aplikasi Kriptografi &mdash; mata kuliah Keamanan
 Informasi, Program Studi Informatika, Universitas Siliwangi.
 
+---
+
+## Daftar Isi
+
+- [Anggota Kelompok](#anggota-kelompok)
+- [Deskripsi](#deskripsi)
+- [Struktur Proyek](#struktur-proyek)
+- [Cara Instalasi](#cara-instalasi)
+- [Cara Menjalankan Aplikasi](#cara-menjalankan-aplikasi)
+- [Cara Menjalankan Pengujian](#cara-menjalankan-pengujian)
+- [Deploy ke Vercel](#deploy-ke-vercel-git-integration)
+- [Contoh Penggunaan API](#contoh-penggunaan-api)
+- [Format Envelope `.krp`](#format-envelope-krp)
+- [Keamanan & Batasan](#keamanan--batasan-yang-perlu-diketahui)
+- [Penggunaan Asisten AI](#penggunaan-asisten-ai)
+- [Lisensi](#lisensi)
+
+---
+
 ## Anggota Kelompok
 
 | Nama | NPM |
 |---|---|
-| _(Raka Restu Saputra)_ | _(247006111172)_ |
-| _(Tazril Dwi Aprila)_ | _(247006111173)_ |
+| _(Raka Restu Saputra)_ | _(172)_ |
+| _(Tazril Dwi Aprila)_ | _(173)_ |
+
+---
 
 ## Deskripsi
 
@@ -35,10 +62,12 @@ Aplikasi menyediakan:
   ciphertext &rarr; dekripsi benar &rarr; tolak kata sandi salah &rarr; tolak
   ciphertext yang diubah 1 byte.
 - **Skrip pengujian menyeluruh** (`testing/benchmark.py`) yang menghasilkan
-  tabel Excel (`laporan/hasil_pengujian.xlsx`) berisi: uji korektnas
+  tabel Excel (`report/hasil_pengujian.xlsx`) berisi: uji korektnas
   (>=10 masukan berbeda termasuk citra & PDF), waktu enkripsi/dekripsi untuk
   1&nbsp;KB/1&nbsp;MB/10&nbsp;MB, avalanche effect, entropi, dan perbandingan
   dua algoritma &mdash; beserta grafik histogram byte (PNG).
+
+---
 
 ## Struktur Proyek
 
@@ -55,13 +84,15 @@ tugas-kripto/
 ├── testing/
 │   ├── metrics.py           # Avalanche effect, entropi, histogram
 │   ├── sample_files.py      # Generator PNG & PDF sintetis untuk uji korektnas
-│   └── benchmark.py         # Skrip pengujian menyeluruh -> laporan/hasil_pengujian.xlsx
+│   └── benchmark.py         # Skrip pengujian menyeluruh -> report/hasil_pengujian.xlsx
 ├── tests/
 │   ├── test_crypto_core.py  # Unit test fungsi kriptografi (pytest)
 │   └── test_vercel_entrypoint.py  # Guardrail entrypoint deploy Vercel
 ├── sample_data/              # (opsional) taruh berkas gambar/PDF asli di sini
-└── laporan/                  # Keluaran benchmark: xlsx + histogram PNG
+└── report/                  # Keluaran benchmark: xlsx + histogram PNG
 ```
+
+---
 
 ## Cara Instalasi
 
@@ -71,8 +102,8 @@ Membutuhkan **Python 3.10+** (dikembangkan dengan Python 3.12).
 
 ```powershell
 # 1. Clone repositori
-git clone <url-repositori-anda>
-cd tugas-kripto
+git clone https://github.com/Discbrake023/cipherly-encryption.git
+cd cipherly-encryption
 
 # 2. (Disarankan) buat virtual environment
 py -3.12 -m venv venv
@@ -90,8 +121,8 @@ pip install -r requirements.txt
 
 ```bash
 # 1. Clone repositori
-git clone <url-repositori-anda>
-cd tugas-kripto
+git clone https://github.com/Discbrake023/cipherly-encryption.git
+cd cipherly-encryption
 
 # 2. (Disarankan) buat virtual environment
 python3 -m venv venv
@@ -99,7 +130,10 @@ source venv/bin/activate
 
 # 3. Pasang dependensi
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+
+---
 
 ## Cara Menjalankan Aplikasi
 
@@ -123,7 +157,7 @@ Buka **http://127.0.0.1:5000** di browser. Antarmuka memiliki 5 tab:
 1. **Enkripsi Teks** &mdash; enkripsi/dekripsi teks, hasil Base64/hex.
 2. **Enkripsi Berkas** &mdash; unggah berkas apa pun, unduh hasil `.krp`
    (atau berkas asli setelah didekripsi).
-3. **Demo Skenario UTS** &mdash; menjalankan skenario demo wajib secara
+3. **Demo Skenario** &mdash; menjalankan skenario demo wajib secara
    otomatis dalam satu klik.
 4. **Analisis Cepat** &mdash; pratinjau avalanche effect & entropi secara
    interaktif.
@@ -146,6 +180,7 @@ Mematikan hot reload (misalnya saat ingin server statis):
 ```powershell
 # Windows
 $env:FLASK_DEBUG="0"; py -3.12 run_dev.py
+
 $env:FLASK_DEBUG="1"; py -3.12 run_dev.py
 ```
 
@@ -156,6 +191,8 @@ FLASK_DEBUG=0 python3 run_dev.py
 
 > Endpoint `/__dev/version` dan skrip auto-refresh **tidak dirender** saat
 > `FLASK_DEBUG=0` maupun di deployment produksi (Vercel), sehingga aman.
+
+---
 
 ## Cara Menjalankan Pengujian
 
@@ -183,7 +220,7 @@ py -3.12 -m testing.benchmark
 python3 -m testing.benchmark
 ```
 
-Hasilnya akan tersimpan di folder `laporan/`:
+Hasilnya akan tersimpan di folder `report/`:
 
 - `hasil_pengujian.xlsx` &mdash; 5 sheet: Uji Korektnas, Uji Waktu, Avalanche
   Effect, Entropi, dan Perbandingan Algoritma.
@@ -194,6 +231,8 @@ Hasilnya akan tersimpan di folder `laporan/`:
 > langsung dijalankan. Untuk hasil yang lebih meyakinkan pada laporan,
 > silakan tambahkan berkas gambar/PDF asli ke folder `sample_data/` sebelum
 > menjalankan `benchmark.py` &mdash; berkas tersebut akan otomatis ikut diuji.
+
+---
 
 ## Deploy ke Vercel (Git Integration)
 
@@ -224,6 +263,8 @@ selalu memilih `api/index.py` dan root tidak memiliki `app.py` yang bisa
 bertabrakan dengan package `app/`. Jalankan `py -3.12 -m pytest -v` sebelum
 push.
 
+---
+
 ## Contoh Penggunaan (API)
 
 Aplikasi juga dapat dipakai lewat API langsung, contoh dengan `curl`:
@@ -240,6 +281,8 @@ curl -X POST http://127.0.0.1:5000/api/encrypt/file \
   -F "algorithm=chacha20" -F "kdf=argon2" -o dokumen.pdf.krp
 ```
 
+---
+
 ## Format Envelope (`.krp`)
 
 Setiap hasil enkripsi disimpan sebagai satu blok biner mandiri sehingga
@@ -254,6 +297,8 @@ Dekripsi akan **ditolak** bila:
 - kata sandi salah (kunci turunan berbeda &rarr; verifikasi tag AEAD gagal), atau
 - ciphertext/tag telah diubah walau hanya satu byte.
 
+---
+
 ## Keamanan & Batasan yang Perlu Diketahui
 
 - Kunci privat RSA pada tab **Hibrida** ditampilkan di UI **khusus untuk
@@ -265,13 +310,7 @@ Dekripsi akan **ditolak** bila:
 - Aplikasi ini adalah proyek tugas kuliah untuk tujuan pembelajaran, bukan
   produk yang telah diaudit keamanannya secara independen.
 
-## Penggunaan Asisten AI
-
-Sebagian kode pada proyek ini dibantu oleh asisten AI (Claude) untuk
-mempercepat penulisan boilerplate Flask, styling antarmuka, dan struktur
-skrip pengujian. Seluruh logika kriptografi inti (pemilihan algoritma,
-parameter KDF, desain format envelope) telah ditinjau dan dipahami oleh
-anggota kelompok.
+---
 
 ## Lisensi
 

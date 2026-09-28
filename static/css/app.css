@@ -19,10 +19,10 @@
 .side {
   background-color: var(--surface-1);
   border-right: 1px solid var(--border);
-  padding: var(--space-5) var(--space-4);
+  padding: var(--space-4) var(--space-3);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -41,24 +41,6 @@
 
 .brand-link:hover {
   opacity: 0.9;
-}
-
-.brand-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background-color: var(--primary-subtle);
-  color: var(--primary);
-  border: 1px solid var(--primary-border);
-  flex-shrink: 0;
-}
-
-.brand-mark svg {
-  width: 18px;
-  height: 18px;
 }
 
 .brand-name {
@@ -85,20 +67,20 @@
 .tab {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   text-align: left;
   background-color: transparent;
   border: 1px solid transparent;
   color: var(--text-secondary);
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
   width: 100%;
-  min-height: 44px;
+  min-height: 40px;
 }
 
 .tab:hover {
@@ -175,7 +157,7 @@
 .breadcrumb {
   font-size: 13px;
   color: var(--text-muted);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
   display: flex;
   gap: 8px;
   align-items: center;
@@ -196,7 +178,7 @@
 }
 
 .content {
-  padding: var(--space-6) var(--space-8);
+  padding: var(--space-5) var(--space-6);
   max-width: 1100px;
   width: 100%;
   margin: 0 auto;
@@ -214,7 +196,7 @@
 /* Grid layout */
 .grid {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
 .grid.two {
@@ -228,19 +210,29 @@
   .side {
     position: static;
     height: auto;
-    padding: var(--space-4);
+    padding: var(--space-3);
+    gap: var(--space-3);
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-link {
+    padding: var(--space-1) var(--space-2);
   }
   .tabs {
     flex-direction: row;
     overflow-x: auto;
     gap: var(--space-2);
-    padding-bottom: var(--space-2);
+    padding-bottom: var(--space-1);
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
   .tab {
     white-space: nowrap;
     width: auto;
     flex-shrink: 0;
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 12.5px;
   }
   .side-footer p {
     display: none;
@@ -250,5 +242,29 @@
   }
   .content {
     padding: var(--space-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: var(--space-3);
+  }
+  .card {
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+  .btn-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-row .btn {
+    width: 100%;
+  }
+  .mode-toggle {
+    width: 100%;
+  }
+  .mode-opt {
+    flex: 1;
+    justify-content: center;
   }
 }

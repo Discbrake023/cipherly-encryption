@@ -44,7 +44,6 @@ html, body {
 }
 
 .brand { display: flex; align-items: center; gap: 0.65rem; }
-.brand-mark { color: var(--accent); font-size: 1.1rem; }
 .brand-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
 .brand-sub { color: var(--muted); font-size: 0.78rem; margin-top: 0.1rem; }
 

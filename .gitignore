@@ -5,7 +5,7 @@ venv/
 .venv/
 *.krp
 # laporan/*.png
-laporan/*.pdf
+report/*.pdf
 .DS_Store
 .megamemory
 .omo

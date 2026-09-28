@@ -8,10 +8,10 @@
     <div class="card">
         <h2>Langkah 1 — Buat Kunci</h2>
         <div class="btn-row compact">
-            <button class="btn primary sm" id="h-genkeys-btn">
+            <button class="btn primary" id="h-genkeys-btn">
                 Buat Kunci RSA-2048
             </button>
-            <button class="btn ghost sm" id="h-clear-btn" type="button">
+            <button class="btn outline" id="h-clear-btn" type="button">
                 Hapus Kunci Dari Layar
             </button>
         </div>
@@ -20,7 +20,7 @@
             Mode Demo: Kunci disimpan sementara di browser Anda. Jangan gunakan untuk data
             sensitif nyata. Refresh halaman akan mempertahankan kunci sampai Anda menutup tab.
         </p>
-        <div class="grid two" style="margin-top: 1rem">
+        <div class="grid two">
             <label
                 >Kunci Publik (bagikan ke pengirim)
                 <span class="ta-wrap">
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <div class="card" style="margin-top: 1rem">
+    <div class="card">
         <h2>Langkah 2 — Kunci Pesan (Pengirim)</h2>
         <div class="grid two">
             <div>
@@ -82,7 +82,7 @@
                     <i data-lucide="badge-check" class="inline-icon" aria-hidden="true"></i>
                     Menggunakan Kunci Publik Aktif dari Langkah 1
                 </div>
-                <button class="btn ghost" id="h-other-pub-toggle" type="button">
+                <button class="btn outline" id="h-other-pub-toggle" type="button">
                     Tempel kunci publik lain
                 </button>
                 <label id="h-other-pub-wrap" hidden
@@ -96,7 +96,7 @@
                 </label>
                 <input type="hidden" id="h-pub-active" autocomplete="off" />
                 <div class="btn-row compact">
-                    <button class="btn primary sm" id="h-encrypt-btn">
+                    <button class="btn primary" id="h-encrypt-btn">
                         Enkripsi Hibrida &rarr;
                     </button>
                 </div>
@@ -129,7 +129,7 @@
         </div>
     </div>
 
-    <div class="card" style="margin-top: 1rem">
+    <div class="card">
         <h2>Langkah 3 — Buka Pesan (Penerima)</h2>
         <div class="grid two">
             <label
@@ -153,7 +153,7 @@
                     ></textarea>
                 </label>
                 <div class="btn-row">
-                    <button class="btn ghost" id="h-toggle-priv" type="button">
+                    <button class="btn outline" id="h-toggle-priv" type="button">
                         Ganti Kunci Privat
                     </button>
                 </div>
@@ -169,7 +169,7 @@
                 </label>
             </div>
         </div>
-        <div class="btn-row compact" style="margin-top: 0.5rem">
+        <div class="btn-row compact">
             <button class="btn primary" id="h-decrypt-btn" disabled>
                 &larr; Dekripsi Hibrida
             </button>

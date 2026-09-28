@@ -11,10 +11,10 @@ Menjalankan seluruh "Pengujian wajib" pada spesifikasi tugas:
   5. Perbandingan AES-256-GCM vs ChaCha20-Poly1305
 
 Keluaran:
-  laporan/hasil_pengujian.xlsx   -> seluruh tabel hasil (dikumpulkan sebagai
+  report/hasil_pengujian.xlsx    -> seluruh tabel hasil (dikumpulkan sebagai
                                      "Data pengujian" sesuai Bagian 5)
-  laporan/histogram_plaintext.png
-  laporan/histogram_ciphertext.png
+  report/histogram_plaintext.png
+  report/histogram_ciphertext.png
 
 Cara menjalankan (dari root proyek):
     python -m testing.benchmark
@@ -39,12 +39,8 @@ ALGORITHMS = ["aes-gcm", "chacha20"]
 KDF_FOR_SPEED_TESTS = "pbkdf2"   # KDF paling cepat untuk pengujian throughput enkripsi
 PASSWORD = "K@t4S4ndiUjiCoba2026!"
 TIMING_REPEATS = 5               # jumlah pengulangan tiap pengukuran waktu, dirata-rata
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "laporan")
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "report")
 
-
-# ---------------------------------------------------------------------------
-# 1) Uji korektnas: >= 10 masukan berbeda, termasuk citra & PDF
-# ---------------------------------------------------------------------------
 
 def build_test_inputs() -> dict:
     inputs = {
@@ -61,7 +57,7 @@ def build_test_inputs() -> dict:
         "data_semua_nol": bytes(4096),
         "data_semua_0xff": bytes([0xFF]) * 4096,
     }
-    # Jika mahasiswa menaruh berkas asli di sample_data/, ikutkan juga.
+    
     sample_dir = os.path.join(os.path.dirname(OUTPUT_DIR), "sample_data")
     if os.path.isdir(sample_dir):
         for fname in sorted(os.listdir(sample_dir)):
@@ -82,7 +78,7 @@ def run_correctness_tests(inputs: dict) -> list[dict]:
                     decrypted = ck.decrypt_bytes(envelope, PASSWORD)
                     ok = decrypted == plaintext
                     error = ""
-                except Exception as e:  # pragma: no cover - dicatat sebagai kegagalan
+                except Exception as e:  
                     ok = False
                     error = str(e)
                 rows.append({
@@ -94,11 +90,6 @@ def run_correctness_tests(inputs: dict) -> list[dict]:
                     "keterangan": error,
                 })
     return rows
-
-
-# ---------------------------------------------------------------------------
-# 2) Waktu enkripsi & dekripsi untuk 1 KB, 1 MB, 10 MB
-# ---------------------------------------------------------------------------
 
 def run_timing_tests() -> list[dict]:
     sizes = {"1 KB": 1024, "1 MB": 1024 ** 2, "10 MB": 10 * 1024 ** 2}
@@ -129,11 +120,6 @@ def run_timing_tests() -> list[dict]:
             })
     return rows
 
-
-# ---------------------------------------------------------------------------
-# 3) Avalanche effect
-# ---------------------------------------------------------------------------
-
 def run_avalanche_tests() -> list[dict]:
     sample_texts = [
         b"A",
@@ -155,11 +141,6 @@ def run_avalanche_tests() -> list[dict]:
             })
     return rows
 
-
-# ---------------------------------------------------------------------------
-# 4) Entropi & histogram
-# ---------------------------------------------------------------------------
-
 def run_entropy_and_histogram(sample_plaintext: bytes) -> tuple[list[dict], list[int], list[int]]:
     rows = []
     hist_plain = byte_histogram(sample_plaintext)
@@ -175,11 +156,6 @@ def run_entropy_and_histogram(sample_plaintext: bytes) -> tuple[list[dict], list
             hist_cipher_last = byte_histogram(envelope)
 
     return rows, hist_plain, hist_cipher_last
-
-
-# ---------------------------------------------------------------------------
-# 5) Perbandingan ringkas AES-256-GCM vs ChaCha20-Poly1305
-# ---------------------------------------------------------------------------
 
 def build_comparison_summary(timing_rows: list[dict], avalanche_rows: list[dict]) -> list[dict]:
     rows = []
@@ -201,11 +177,6 @@ def build_comparison_summary(timing_rows: list[dict], avalanche_rows: list[dict]
             ),
         })
     return rows
-
-
-# ---------------------------------------------------------------------------
-# Penulisan hasil ke Excel (XLSX) + grafik histogram (PNG)
-# ---------------------------------------------------------------------------
 
 def write_excel_report(correctness, timing, avalanche, entropy, comparison):
     from openpyxl import Workbook

@@ -13,12 +13,12 @@
   border: 1px solid var(--border);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 8px 18px;
-  min-height: 40px;
+  padding: 6px 15px;
+  min-height: 34px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
@@ -95,17 +95,17 @@
 }
 
 .btn.lg {
-  padding: 12px 28px;
-  min-height: 48px;
-  font-size: 15px;
+  padding: 10px 24px;
+  min-height: 44px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: var(--radius-md);
 }
 
 .btn.sm {
-  padding: 4px 10px;
-  min-height: 30px;
-  font-size: 12px;
+  padding: 3px 10px;
+  min-height: 27px;
+  font-size: 11.5px;
   border-radius: var(--radius-xs);
 }
 
@@ -119,10 +119,15 @@
 
 .btn-row {
   display: flex;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
+  gap: var(--space-2);
+  margin-top: var(--space-3);
   flex-wrap: wrap;
   align-items: center;
+}
+
+.btn-row.compact {
+  margin-top: var(--space-2);
+  gap: var(--space-2);
 }
 
 /* ---------- Cards (elevation via surface brightness, no borders) ---------- */
@@ -130,8 +135,8 @@
   background-color: var(--surface-1);
   border: none;
   border-radius: var(--radius-md);
-  padding: var(--space-5);
-  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
   transition: background-color var(--transition-fast);
 }
 
@@ -151,7 +156,7 @@ label {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .label-title {
@@ -325,14 +330,14 @@ select option:checked {
   border: 1px dashed var(--border-hover);
   background-color: var(--surface-2);
   border-radius: var(--radius-md);
-  padding: var(--space-5) var(--space-4);
+  padding: var(--space-4) var(--space-3);
   text-align: center;
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
-  min-height: 110px;
+  min-height: 92px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
   align-items: center;
   justify-content: center;
   user-select: none;
@@ -476,7 +481,7 @@ select option:checked {
   padding: 3px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
   max-width: 100%;
 }
 
@@ -486,10 +491,10 @@ select option:checked {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: 7px 16px;
+  padding: 6px 14px;
   border-radius: var(--radius-xs);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--text-secondary);
   transition: color var(--transition-fast), background-color var(--transition-fast);
@@ -613,6 +618,8 @@ select option:checked {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-3);
 }
 
 /* ---------- Textarea dengan tombol salin ikon (pojok kanan atas) ---------- */
@@ -870,6 +877,7 @@ input[type="file"].invalid {
   align-items: center;
   gap: var(--space-2);
   padding: 7px 12px;
+  margin-bottom: 12px;
   border-radius: var(--radius-sm);
   background-color: var(--success-subtle);
   border: 1px solid var(--success-border);
@@ -944,19 +952,20 @@ details.advanced-inline .advanced-content {
   gap: var(--space-2);
   border: none;
   padding: 0;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-4);
 }
 .mode-opt {
   display: inline-flex;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
-  min-height: 44px;
+  padding: 7px 14px;
+  min-height: 38px;
   border-radius: var(--radius-sm);
   background-color: var(--surface-1);
   border: 1px solid var(--border);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--text-secondary);
   transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
@@ -975,14 +984,14 @@ details.advanced-inline .advanced-content {
   border: 1px dashed var(--border-hover);
   background-color: var(--surface-2);
   border-radius: var(--radius-md);
-  padding: var(--space-5) var(--space-4);
+  padding: var(--space-4) var(--space-3);
   text-align: center;
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
-  min-height: 88px;
+  min-height: 80px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
   justify-content: center;
   font-size: 13px;
@@ -1170,8 +1179,8 @@ svg.lucide.step-ico {
 /* ---------- Settings Block + Algorithm Card Selector ---------- */
 .settings-block {
   border: none;
-  padding: var(--space-4) var(--space-5);
-  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-4);
   background-color: var(--surface-1);
   border-radius: var(--radius-md);
 }
@@ -1182,7 +1191,7 @@ svg.lucide.step-ico {
   font-size: 13px;
   font-weight: 700;
   color: var(--text-secondary);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 .settings-title svg {
   width: 15px;
@@ -1198,15 +1207,15 @@ svg.lucide.step-ico {
 .algo-cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 .algo-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  padding: var(--space-3) var(--space-4);
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
   background-color: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
