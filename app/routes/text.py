@@ -27,11 +27,13 @@ def encrypt_text():
     encoded = ck.to_hex(envelope) if encoding == "hex" else ck.to_base64(envelope)
     meta = ck.parse_envelope_meta(envelope)
 
+    cipher_preview = envelope[:32].hex().upper()
     return jsonify({
         "envelope": encoded,
         "encoding": encoding,
         "elapsed_ms": round(result.elapsed_seconds * 1000, 3),
         "meta": meta,
+        "cipher_hex_preview": cipher_preview,
     })
 
 

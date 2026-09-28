@@ -128,6 +128,13 @@ export function initTextPanel() {
       });
       ciphertextInput.value = data.envelope;
       renderMeta(data);
+      const previewPanel = document.getElementById("t-cipher-preview");
+      const previewHex = document.getElementById("t-cipher-preview-hex");
+      if (previewPanel && previewHex && data.cipher_hex_preview) {
+        previewHex.textContent = data.cipher_hex_preview;
+        previewPanel.hidden = false;
+        refreshIcons();
+      }
       box.textContent = "Berhasil dikunci. Salin hasil di samping.";
       box.className = "result-box ok";
       showToast("Pesan berhasil dikunci.", "success");

@@ -29,8 +29,10 @@ def encrypt_file():
     out_name = f.filename + ".krp"
     response = send_file(buf, as_attachment=True, download_name=out_name,
                          mimetype="application/octet-stream")
+    cipher_preview = envelope[:32].hex().upper()
     response.headers["X-Elapsed-Ms"] = str(round(result.elapsed_seconds * 1000, 3))
-    response.headers["Access-Control-Expose-Headers"] = "X-Elapsed-Ms"
+    response.headers["X-Cipher-Hex-Preview"] = cipher_preview
+    response.headers["Access-Control-Expose-Headers"] = "X-Elapsed-Ms, X-Cipher-Hex-Preview"
     return response
 
 

@@ -136,6 +136,7 @@ export function initFilePanel() {
       if (!res.ok) throw new Error(errData?.error || `Server menolak (HTTP ${res.status}) — berkas mungkin melebihi 32MB.`);
       const blob = await res.blob();
       const elapsed = res.headers.get("X-Elapsed-Ms");
+      const hexPreview = res.headers.get("X-Cipher-Hex-Preview");
       const disposition = res.headers.get("Content-Disposition") || "";
       const match = disposition.match(/filename="?(.+?)"?$/);
       const filename = match ? match[1] : (fileInput.files[0].name + ".krp");
@@ -145,6 +146,13 @@ export function initFilePanel() {
       const resultText = document.getElementById("f-enc-result-text");
       if (resultText) resultText.textContent = `${filename} • ${elapsed} ms`;
       if (resultBox) resultBox.hidden = false;
+      const previewPanel = document.getElementById("f-cipher-preview");
+      const previewHex = document.getElementById("f-cipher-preview-hex");
+      if (previewPanel && previewHex && hexPreview) {
+        previewHex.textContent = hexPreview;
+        previewPanel.hidden = false;
+        refreshIcons();
+      }
       status.textContent = `Berhasil dikunci. Tersimpan sebagai ${filename} (${elapsed} ms).`;
       status.className = "status ok";
       showToast("Berhasil dikunci — " + filename, "success");
