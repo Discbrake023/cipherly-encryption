@@ -228,8 +228,8 @@ Hasilnya akan tersimpan di folder `report/`:
 
 > **Catatan:** `testing/sample_files.py` membuat citra PNG dan dokumen PDF
 > sintetis secara otomatis (tanpa dependensi tambahan) agar skrip dapat
-> langsung dijalankan. Untuk hasil yang lebih meyakinkan pada laporan,
-> silakan tambahkan berkas gambar/PDF asli ke folder `sample_data/` sebelum
+> langsung dijalankan.
+> tambahkan berkas gambar/PDF asli ke folder `sample_data/` sebelum
 > menjalankan `benchmark.py` &mdash; berkas tersebut akan otomatis ikut diuji.
 
 ---
