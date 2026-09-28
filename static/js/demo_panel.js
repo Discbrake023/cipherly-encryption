@@ -117,14 +117,14 @@ export function initDemoPanel() {
       output.innerHTML = `
         <ol class="steps">
         <li class="step pass"><div class="step-title">${icon("circle-check", "step-ico")} 1. Berkas terkunci (${data.encrypt_ms} ms)</div>
-          <div class="step-detail">📏 Asli: ${formatSize(origSize)} &rarr; Terkunci: ${formatSize(lockedSize)} (overhead AEAD ${overhead}%)</div>
+          <div class="step-detail">Asli: ${formatSize(origSize)} &rarr; Terkunci: ${formatSize(lockedSize)} (overhead AEAD ${overhead}%)</div>
           <div class="step-detail">${data.meta.algorithm} + ${data.meta.kdf} — salt ${String(data.meta.salt_hex).slice(0,12)}...</div></li>
         <li class="step"><div class="step-title">${icon("search", "step-ico")} 2. Hasil terkunci (cuplikan)</div>
           <div class="step-detail">${data.ciphertext_preview_hex}</div></li>
         <li class="step ${ok(data.decrypt_correct_matches_original)}"><div class="step-title">${iconFor(data.decrypt_correct_matches_original)} 3. Dibuka sandi benar — ${data.decrypt_correct_matches_original ? "COCOK" : "TIDAK COCOK"} (${data.decrypt_correct_ms} ms)</div></li>
-        <li class="step ${ok(data.wrong_password_rejected)}"><div class="step-title">${iconFor(data.wrong_password_rejected)} 4. Sandi salah — ${data.wrong_password_rejected ? "&#9989; Verifikasi Keamanan Berhasil" : "&#9888;&#65039; LOLOS (bahaya!)"}</div>
+        <li class="step ${ok(data.wrong_password_rejected)}"><div class="step-title">${iconFor(data.wrong_password_rejected)} 4. Sandi salah — ${data.wrong_password_rejected ? "Verifikasi Keamanan Berhasil" : "LOLOS (bahaya!)"}</div>
           <div class="step-detail">${data.wrong_password_message || ""}</div></li>
-        <li class="step ${ok(data.tampered_rejected)}"><div class="step-title">${iconFor(data.tampered_rejected)} 5. File diubah 1 byte — ${data.tampered_rejected ? "&#9989; Integritas Terjaga" : "&#9888;&#65039; LOLOS (bahaya!)"}</div>
+        <li class="step ${ok(data.tampered_rejected)}"><div class="step-title">${iconFor(data.tampered_rejected)} 5. File diubah 1 byte — ${data.tampered_rejected ? "Integritas Terjaga" : "LOLOS (bahaya!)"}</div>
           <div class="step-detail">${data.tampered_message || ""}</div></li>
         </ol>`;
       refreshIcons();

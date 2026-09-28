@@ -24,7 +24,8 @@ export function initAnalysisPanel() {
     const output = document.getElementById("a-output");
     output.innerHTML = "<p class='status'>Menghitung keacakan...</p>";
     const label = runBtn.textContent;
-    runBtn.disabled = true; runBtn.textContent = "Menghitung...";
+    runBtn.disabled = true;
+    runBtn.textContent = "Menghitung...";
     try {
       const data = await postJSON("/api/analyze/avalanche", {
         plaintext: document.getElementById("a-plaintext").value,
@@ -36,12 +37,12 @@ export function initAnalysisPanel() {
         <div class="metric-card">
           <div class="metric-value">${data.avalanche_plaintext_bit_change_percent}%</div>
           <div class="metric-label">Berubah saat 1 huruf diubah (ideal 50%) — <strong>${verdictAv(data.avalanche_plaintext_bit_change_percent)}</strong></div>
-          <div class="meter"><div class="meter-fill" style="transform:scaleX(${(parseFloat(data.avalanche_plaintext_bit_change_percent)/100).toFixed(3)})"></div></div>
+          <div class="meter"><div class="meter-fill" style="transform:scaleX(${(parseFloat(data.avalanche_plaintext_bit_change_percent) / 100).toFixed(3)})"></div></div>
         </div>
         <div class="metric-card">
           <div class="metric-value">${data.avalanche_key_change_percent}%</div>
           <div class="metric-label">Berubah saat 1 huruf sandi diubah (ideal 50%) — <strong>${verdictAv(data.avalanche_key_change_percent)}</strong></div>
-          <div class="meter"><div class="meter-fill" style="transform:scaleX(${(parseFloat(data.avalanche_key_change_percent)/100).toFixed(3)})"></div></div>
+          <div class="meter"><div class="meter-fill" style="transform:scaleX(${(parseFloat(data.avalanche_key_change_percent) / 100).toFixed(3)})"></div></div>
         </div>
         <div class="metric-card">
           <div class="metric-value">${data.entropy_plaintext_bits_per_byte}</div>
@@ -50,11 +51,14 @@ export function initAnalysisPanel() {
         <div class="metric-card">
           <div class="metric-value">${data.entropy_ciphertext_bits_per_byte}</div>
           <div class="metric-label">Keacakan hasil terkunci (dari 8) — <strong>${verdictEnt(data.entropy_ciphertext_bits_per_byte)}</strong></div>
-          <div class="meter"><div class="meter-fill" style="transform:scaleX(${(parseFloat(data.entropy_ciphertext_bits_per_byte)/8).toFixed(3)})"></div></div>
+          <div class="meter"><div class="meter-fill" style="transform:scaleX(${(parseFloat(data.entropy_ciphertext_bits_per_byte) / 8).toFixed(3)})"></div></div>
         </div>`;
       refreshIcons();
     } catch (e) {
       output.innerHTML = `<p class="status err">Gagal: ${e.message}</p>`;
-    } finally { runBtn.disabled = false; runBtn.textContent = label; }
+    } finally {
+      runBtn.disabled = false;
+      runBtn.textContent = label;
+    }
   });
 }

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHybridPanel();
   // Password strength meter (instruksi §4) — hanya field enkripsi
   initPasswordStrength("t-password");
-  initPasswordStrength("f-password-enc");
+  initPasswordStrength("f-password-enc", "f-password-meter");
 
   // Tooltip Tippy.js — hanya jika CDN berhasil dimuat.
   // Berjalan setelah lucide.createIcons() (listener base.html terdaftar lebih dulu).

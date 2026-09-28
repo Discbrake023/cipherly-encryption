@@ -9,7 +9,9 @@
 Aplikasi web untuk mengenkripsi dan mendekripsi teks maupun berkas memakai
 algoritma kriptografi modern **AES-256-GCM** dan **ChaCha20-Poly1305**,
 dibuat untuk Tugas Proyek Aplikasi Kriptografi &mdash; mata kuliah Keamanan
-Informasi, Program Studi Informatika, Universitas Siliwangi.
+Informasi.
+
+[Link Demo](https://cipherly-encryption.vercel.app/)
 
 ---
 
@@ -72,24 +74,82 @@ Aplikasi menyediakan:
 ## Struktur Proyek
 
 ```
-tugas-kripto/
-├── run_dev.py              # Shim server dev lokal (hot reload, FLASK_DEBUG=1)
-├── api/index.py            # Entrypoint serverless Vercel (WSGI `app`)
-├── app/                    # Package Flask: factory, config, blueprint routes
-├── crypto_core.py          # Modul inti kriptografi (AEAD, KDF, hibrida RSA)
-├── requirements.txt
-├── templates/index.html    # Antarmuka web (5 tab)
-├── static/style.css
-├── static/script.js
-├── testing/
-│   ├── metrics.py           # Avalanche effect, entropi, histogram
-│   ├── sample_files.py      # Generator PNG & PDF sintetis untuk uji korektnas
-│   └── benchmark.py         # Skrip pengujian menyeluruh -> report/hasil_pengujian.xlsx
-├── tests/
-│   ├── test_crypto_core.py  # Unit test fungsi kriptografi (pytest)
-│   └── test_vercel_entrypoint.py  # Guardrail entrypoint deploy Vercel
-├── sample_data/              # (opsional) taruh berkas gambar/PDF asli di sini
-└── report/                  # Keluaran benchmark: xlsx + histogram PNG
+📂 cipherly-encryption
+├─── 📂 api/                     # API routes and endpoints
+│   └─── 📄 index.py                     # Python script
+├─── 📂 app/                     # Application pages and routing
+│   ├─── 📂 routes/                     # Directory
+│   │   ├─── 📄 __init__.py                     # Python script
+│   │   ├─── 📄 analysis.py                     # Python script
+│   │   ├─── 📄 demo.py                     # Python script
+│   │   ├─── 📄 file.py                     # Python script
+│   │   ├─── 📄 hybrid.py                     # Python script
+│   │   ├─── 📄 text.py                     # Python script
+│   │   └─── 📄 views.py                     # Python script
+│   ├─── 📄 __init__.py                     # Python script
+│   ├─── 📄 config.py                     # Python script
+│   └─── 📄 errors.py                     # Python script
+├─── 📂 report/                     # Directory
+│   ├─── 📂 sample_data/                     # Directory
+│   │   └─── 📄 README.md                     # Project documentation
+│   ├─── 📄 hasil_pengujian.xlsx                     # File
+│   ├─── 📄 histogram_ciphertext.png                     # PNG image
+│   ├─── 📄 histogram_plaintext.png                     # PNG image
+│   └─── 📄 laporan_teknis_skeleton.docx                     # File
+├─── 📂 static/                     # Directory
+│   ├─── 📂 css/                     # Directory
+│   │   ├─── 📄 app.css                     # Stylesheet
+│   │   ├─── 📄 base.css                     # Stylesheet
+│   │   ├─── 📄 components.css                     # Stylesheet
+│   │   ├─── 📄 landing.css                     # Stylesheet
+│   │   └─── 📄 variables.css                     # Stylesheet
+│   ├─── 📂 js/                     # Directory
+│   │   ├─── 📄 analysis_panel.js                     # JavaScript file
+│   │   ├─── 📄 api.js                     # JavaScript file
+│   │   ├─── 📄 app.js                     # JavaScript file
+│   │   ├─── 📄 demo_panel.js                     # JavaScript file
+│   │   ├─── 📄 file_panel.js                     # JavaScript file
+│   │   ├─── 📄 hybrid_panel.js                     # JavaScript file
+│   │   ├─── 📄 icons.js                     # JavaScript file
+│   │   ├─── 📄 password_strength.js                     # JavaScript file
+│   │   ├─── 📄 tabs.js                     # JavaScript file
+│   │   ├─── 📄 text_panel.js                     # JavaScript file
+│   │   └─── 📄 toast.js                     # JavaScript file
+│   ├─── 📂 tests/                     # Test files
+│   │   ├─── 📄 run.mjs                     # File
+│   │   ├─── 📄 run.ps1                     # File
+│   │   └─── 📄 selftest.html                     # File
+│   ├─── 📄 script.js                     # JavaScript file
+│   └─── 📄 style.css                     # Stylesheet
+├─── 📂 templates/                     # Directory
+│   ├─── 📂 panels/                     # Directory
+│   │   ├─── 📄 panel_analysis.html                     # File
+│   │   ├─── 📄 panel_demo.html                     # File
+│   │   ├─── 📄 panel_file.html                     # File
+│   │   ├─── 📄 panel_hybrid.html                     # File
+│   │   └─── 📄 panel_text.html                     # File
+│   ├─── 📄 app.html                     # File
+│   ├─── 📄 base.html                     # File
+│   ├─── 📄 index.html                     # File
+│   └─── 📄 landing.html                     # File
+├─── 📂 testing/                     # Directory
+│   ├─── 📄 __init__.py                     # Python script
+│   ├─── 📄 benchmark.py                     # Python script
+│   ├─── 📄 metrics.py                     # Python script
+│   └─── 📄 sample_files.py                     # Python script
+├─── 📂 tests/                     # Test files
+│   ├─── 📄 test_crypto_core.py                     # Python script
+│   └─── 📄 test_vercel_entrypoint.py                     # Python script
+├─── 📄 .gitignore                     # Git ignore rules
+├─── 📄 .python-version                     # File
+├─── 📄 .vercelignore                     # File
+├─── 📄 crypto_core.py                     # Python script
+├─── 📄 README.md                     # Project documentation
+├─── 📄 requirements-dev.txt                     # File
+├─── 📄 requirements.txt                     # File
+├─── 📄 run_dev.py                     # Python script
+├─── 📄 skills-lock.json                     # JSON configuration
+└─── 📄 vercel.json                     # JSON configuration
 ```
 
 ---

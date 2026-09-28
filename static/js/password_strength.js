@@ -18,12 +18,16 @@ export function passwordLevel(value) {
   return ["", "Lemah", "Cukup", "Kuat"][n];
 }
 
-export function initPasswordStrength(inputId) {
+export function initPasswordStrength(inputId, meterId) {
   const input = document.getElementById(inputId);
-  const wrap = document.getElementById(inputId + "-meter");
+  // ID meter tidak selalu mengikuti pola inputId + "-meter":
+  // teks pakai t-password -> t-password-meter (cocok),
+  // berkas pakai f-password-enc -> f-password-meter (tidak cocok).
+  const wrap = document.getElementById(meterId || inputId + "-meter");
   if (!input || !wrap) return;
   const fill = wrap.querySelector(".pw-meter-fill");
   const label = wrap.querySelector(".pw-meter-label");
+  if (!fill || !label) return;
   let timer = null;
 
   const render = () => {
@@ -37,7 +41,7 @@ export function initPasswordStrength(inputId) {
       (lvl === "Lemah" ? "weak" : lvl === "Cukup" ? "fair" : lvl === "Kuat" ? "strong" : "");
     label.textContent = lvl ? "Kekuatan: " + lvl : "";
     RULES.forEach((r) => {
-      wrap.querySelector('[data-rule="' + r.id + '"]').classList.toggle("ok", ids.includes(r.id));
+      wrap.querySelector('[data-rule="' + r.id + '"]')?.classList.toggle("ok", ids.includes(r.id));
     });
   };
 
