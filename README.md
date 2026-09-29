@@ -1,10 +1,12 @@
 # Cipherly &mdash; Aplikasi Enkripsi Modern
 
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![Cryptography](https://img.shields.io/badge/Cryptography-AES--256--GCM%20%2F%20ChaCha20--Poly1305-1F2D3D?logo=python&logoColor=white)](https://cryptography.io/)
-[![Vercel](https://img.shields.io/badge/Vercel-Deploy-000000?logo=vercel&logoColor=white)](https://vercel.com/)
-[![License](https://img.shields.io/badge/License-Educational-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Cryptography](https://img.shields.io/badge/Cryptography-AES--256--GCM_%2F_ChaCha20--Poly1305-1F2D3D?style=for-the-badge&logo=letsencrypt&logoColor=white)](https://cryptography.io/)
+[![Pytest](https://img.shields.io/badge/Pytest-16%2F16_Passed-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://cipherly-encryption.vercel.app)
+[![Repo Size](https://img.shields.io/github/repo-size/Discbrake023/cipherly-encryption?style=for-the-badge&logo=github&logoColor=white&label=Repo%20Size&color=blue)](https://github.com/Discbrake023/cipherly-encryption)
+[![Contributors](https://img.shields.io/github/contributors/Discbrake023/cipherly-encryption?style=for-the-badge&logo=github&logoColor=white&label=Contributors&color=brightgreen)](https://github.com/Discbrake023/cipherly-encryption/graphs/contributors)
 
 Aplikasi web untuk mengenkripsi dan mendekripsi teks maupun berkas memakai
 algoritma kriptografi modern **AES-256-GCM** dan **ChaCha20-Poly1305**,
