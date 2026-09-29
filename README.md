@@ -19,6 +19,7 @@ Informasi.
 
 - [Anggota Kelompok](#anggota-kelompok)
 - [Deskripsi](#deskripsi)
+- [Tech Stack](#tech-stack)
 - [Struktur Proyek](#struktur-proyek)
 - [Cara Instalasi](#cara-instalasi)
 - [Cara Menjalankan Aplikasi](#cara-menjalankan-aplikasi)
@@ -68,6 +69,29 @@ Aplikasi menyediakan:
   (>=10 masukan berbeda termasuk citra & PDF), waktu enkripsi/dekripsi untuk
   1&nbsp;KB/1&nbsp;MB/10&nbsp;MB, avalanche effect, entropi, dan perbandingan
   dua algoritma &mdash; beserta grafik histogram byte (PNG).
+
+---
+
+## Tech Stack
+
+| Layer | Teknologi | Versi | Peran |
+|-------|-----------|-------|------|
+| **Backend** | Python | 3.10+ | Runtime |
+| | Flask | 3.0 | Web framework |
+| | cryptography | Latest | Enkripsi & KDF |
+| **Frontend** | HTML | 5 | Markup (35.5%) |
+| | JavaScript | ES6+ | Interaktivitas (22.7%) |
+| | CSS | 3 | Styling (20.4%) |
+| **Enkripsi** | AES-256-GCM | - | AEAD cipher |
+| | ChaCha20-Poly1305 | - | AEAD cipher |
+| | RSA-OAEP | 2048-bit | Enkripsi hibrida |
+| **KDF** | PBKDF2-HMAC-SHA256 | 600K iter | Key derivation |
+| | scrypt | N=32768 | Key derivation |
+| | Argon2id | t=3, 64MiB | Key derivation |
+| **Deployment** | Vercel | - | Platform hosting |
+| | Python 3.12 | Serverless | Runtime env |
+| **Testing** | pytest | - | Unit testing |
+| | openpyxl | - | Report generation |
 
 ---
 
@@ -349,10 +373,10 @@ Setiap hasil enkripsi disimpan sebagai satu blok biner mandiri sehingga
 tidak perlu menyimpan salt/nonce terpisah:
 
 ```
-──────────┬─────────┬────────┬───────────┬──────────┬───────┬────────┬──────────────┐
+──────────┬─────────┬────────┬───────────┬──────────┬───────┬────[...]
 │ Magic(4B)│ Algo(1B)│ KDF(1B)│ Param(4B) │SaltLen(1B)│ Salt  │NonceLen│ Ciphertext+Tag│
 │   KRP1   │ 0=AES   │ 0=PBKDF2│ Big-Endian│    16     │ 16B   │  12    │  AEAD Output  │
-└──────────┴─────────┴────────┴───────────┴──────────┴───────┴────────┴──────────────┘
+└──────────┴─────────┴────────┴───────────┴──────────┴───────┴───[...]
 ```
 
 Dekripsi akan **ditolak** bila:
