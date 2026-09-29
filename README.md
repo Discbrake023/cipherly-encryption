@@ -121,7 +121,7 @@ Aplikasi menyediakan:
 │   ├─── 📄 hasil_pengujian.xlsx                     # File
 │   ├─── 📄 histogram_ciphertext.png                     # PNG image
 │   ├─── 📄 histogram_plaintext.png                     # PNG image
-│   └─── 📄 laporan_teknis_skeleton.docx                     # File
+│   
 ├─── 📂 static/                     # Directory
 │   ├─── 📂 css/                     # Directory
 │   │   ├─── 📄 app.css                     # Stylesheet
