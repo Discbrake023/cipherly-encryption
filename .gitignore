@@ -4,8 +4,11 @@ __pycache__/
 venv/
 .venv/
 *.krp
-# laporan/*.png
-report/*.pdf
+report/*.docx
+# sample_data lokal saja — keep tanpa upload ke repo
+report/sample_data/*
+!report/sample_data/README.md
+!report/sample_data/.gitkeep
 .DS_Store
 .megamemory
 .omo
