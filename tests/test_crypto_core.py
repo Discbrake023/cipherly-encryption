@@ -66,17 +66,28 @@ def test_empty_and_binary_plaintext():
 
 
 def test_hybrid_rsa_encrypt_decrypt_roundtrip():
-    """Test 6 (fitur pengayaan): enkripsi hibrida RSA-OAEP + AES-GCM harus
+    """Test 6 (fitur pengayaan): enkripsi hibrida RSA-OAEP + AES-GCM/ChaCha20 harus
     roundtrip dengan benar, dan gagal dengan kunci privat yang salah."""
     private_pem, public_pem = ck.generate_rsa_keypair()
     plaintext = b"Pesan hibrida rahasia."
-    envelope = ck.hybrid_encrypt(plaintext, public_pem, "aes-gcm")
-    decrypted = ck.hybrid_decrypt(envelope, private_pem)
-    assert decrypted == plaintext
+    for algorithm in ("aes-gcm", "chacha20"):
+        envelope = ck.hybrid_encrypt(plaintext, public_pem, algorithm)
+        decrypted = ck.hybrid_decrypt(envelope, private_pem)
+        assert decrypted == plaintext
 
+    envelope = ck.hybrid_encrypt(plaintext, public_pem, "aes-gcm")
     other_private_pem, _ = ck.generate_rsa_keypair()
     with pytest.raises(Exception):
         ck.hybrid_decrypt(envelope, other_private_pem)
+
+
+def test_hybrid_invalid_algo_id_raises():
+    """Envelope hibrida dengan algo_id tak dikenal harus ditolak DecryptionError."""
+    private_pem, public_pem = ck.generate_rsa_keypair()
+    envelope = bytearray(ck.hybrid_encrypt(b"uji", public_pem, "aes-gcm"))
+    envelope[4] = 99
+    with pytest.raises(ck.DecryptionError):
+        ck.hybrid_decrypt(bytes(envelope), private_pem)
 
 
 def test_base64_and_hex_encoding_helpers_are_inverse():

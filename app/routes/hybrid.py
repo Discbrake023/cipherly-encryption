@@ -3,19 +3,17 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, request
 
+import time
+import struct
+
 import crypto_core as ck
 
 bp = Blueprint("hybrid", __name__, url_prefix="/api")
-
-# Menyimpan keypair RSA hasil generate sementara di memori (khusus demo hibrida).
-_LAST_KEYPAIR = {"private_pem": None, "public_pem": None}
 
 
 @bp.route("/hybrid/generate-keys", methods=["POST"])
 def hybrid_generate_keys():
     private_pem, public_pem = ck.generate_rsa_keypair()
-    _LAST_KEYPAIR["private_pem"] = private_pem
-    _LAST_KEYPAIR["public_pem"] = public_pem
     return jsonify({
         "public_key": public_pem.decode("ascii"),
         "private_key": private_pem.decode("ascii"),
@@ -38,11 +36,23 @@ def hybrid_encrypt_route():
         return jsonify({"error": "Teks dan kunci publik wajib diisi."}), 400
 
     try:
+        t0 = time.perf_counter()
         envelope = ck.hybrid_encrypt(plaintext.encode("utf-8"), public_key.encode("ascii"), algorithm)
+        elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
     except Exception as e:
         return jsonify({"error": f"Gagal enkripsi hibrida: {e}"}), 400
 
-    return jsonify({"envelope": ck.to_base64(envelope)})
+    try:
+        wrapped_key_size = struct.unpack(">H", envelope[5:7])[0]
+    except Exception:
+        wrapped_key_size = max(0, len(envelope) - 8 - 12 - 16)
+
+    return jsonify({
+        "envelope": ck.to_base64(envelope),
+        "elapsed_ms": elapsed_ms,
+        "wrapped_key_size": wrapped_key_size,
+        "algorithm": algorithm,
+    })
 
 
 @bp.route("/hybrid/decrypt", methods=["POST"])

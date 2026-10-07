@@ -334,8 +334,8 @@ def hybrid_decrypt(envelope: bytes, private_pem: bytes) -> bytes:
         return cipher.decrypt(nonce, ciphertext, None)
     except InvalidTag:
         raise DecryptionError("Dekripsi hibrida gagal: data telah diubah.")
-    except ValueError as e:
-        raise DecryptionError(f"Dekripsi hibrida gagal: {e}")
+    except (ValueError, KeyError, IndexError, struct.error) as e:
+        raise DecryptionError(f"Envelope tidak valid atau rusak: {e}")
 
 
 # ---------------------------------------------------------------------------

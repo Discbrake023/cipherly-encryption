@@ -64,6 +64,12 @@ function parseEnvelopeMeta(b64) {
   }
 }
 
+function isValidPEM(str, type = "PUBLIC KEY") {
+  if (!str || typeof str !== "string") return false;
+  return str.includes(`-----BEGIN ${type}-----`) &&
+    str.includes(`-----END ${type}-----`);
+}
+
 function showEnvelopeMeta(b64, ms) {
   const meta = document.getElementById("h-envelope-meta");
   if (!meta) return;
@@ -207,6 +213,14 @@ export function initHybridPanel() {
       if (meta) meta.hidden = true;
       return;
     }
+    if (!isValidPEM(pubKey, "PUBLIC KEY")) {
+      document.getElementById("h-envelope").value =
+        "Gagal: format kunci publik tidak valid — pastikan diawali -----BEGIN PUBLIC KEY----- dan diakhiri -----END PUBLIC KEY-----.";
+      const meta = document.getElementById("h-envelope-meta");
+      if (meta) meta.hidden = true;
+      return;
+    }
+    const algorithm = document.querySelector('input[name="h-algo"]:checked')?.value || "aes-gcm";
     const label = encryptBtn.textContent;
     encryptBtn.disabled = true;
     encryptBtn.textContent = "Mengunci...";
@@ -215,9 +229,11 @@ export function initHybridPanel() {
       const data = await postJSON("/api/hybrid/encrypt", {
         plaintext: document.getElementById("h-plaintext").value,
         public_key: pubKey,
-        algorithm: "aes-gcm",
+        algorithm,
       });
-      const ms = Math.max(1, Math.round(performance.now() - t0));
+      const ms = (data && typeof data.elapsed_ms === "number")
+        ? data.elapsed_ms
+        : Math.max(1, Math.round(performance.now() - t0));
       document.getElementById("h-envelope").value = data.envelope;
       showEnvelopeMeta(data.envelope, ms);
       const decEnv = document.getElementById("h-dec-envelope");
@@ -251,10 +267,16 @@ export function initHybridPanel() {
     const box = document.getElementById("h-result");
     box.textContent = "Membuka...";
     box.className = "result-box";
+    const privKey = effectivePrivateKey();
+    if (!isValidPEM(privKey, "PRIVATE KEY")) {
+      box.textContent = "Gagal: format kunci privat tidak valid — pastikan diawali -----BEGIN PRIVATE KEY----- dan diakhiri -----END PRIVATE KEY-----.";
+      box.className = "result-box err";
+      return;
+    }
     try {
       const data = await postJSON("/api/hybrid/decrypt", {
         envelope: document.getElementById("h-dec-envelope").value,
-        private_key: effectivePrivateKey(),
+        private_key: privKey,
       });
       box.textContent = "Pesan asli: " + data.plaintext;
       box.className = "result-box ok";

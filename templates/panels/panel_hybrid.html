@@ -95,6 +95,21 @@
                     ></textarea>
                 </label>
                 <input type="hidden" id="h-pub-active" autocomplete="off" />
+                <div class="setting-label" id="h-algo-label">Algoritma sesi (AEAD)</div>
+                <div class="algo-cards" role="group" aria-labelledby="h-algo-label">
+                    <label class="algo-card">
+                        <input type="radio" name="h-algo" value="aes-gcm" checked class="sr-only" />
+                        <i data-lucide="cpu" class="algo-icon" aria-hidden="true"></i>
+                        <span class="algo-name">AES-256-GCM</span>
+                        <span class="algo-desc">Cepat di laptop &amp; desktop</span>
+                    </label>
+                    <label class="algo-card">
+                        <input type="radio" name="h-algo" value="chacha20" class="sr-only" />
+                        <i data-lucide="smartphone" class="algo-icon" aria-hidden="true"></i>
+                        <span class="algo-name">ChaCha20-Poly1305</span>
+                        <span class="algo-desc">Cepat di HP &amp; perangkat mobile</span>
+                    </label>
+                </div>
                 <div class="btn-row compact">
                     <button class="btn primary" id="h-encrypt-btn">
                         Enkripsi Hibrida &rarr;
@@ -106,7 +121,7 @@
                     >Envelope Hibrida (Base64)
                     <span
                         class="label-inline"
-                        data-tippy-content="Struktur KRPH: [Header RSA] [Wrapped Key] [Nonce] [Ciphertext AES] — kunci sesi AES dibungkus RSA, lalu data dienkripsi AES-GCM."
+                        data-tippy-content="Struktur KRPH: [Header RSA] [Wrapped Key] [Nonce] [Ciphertext AEAD] — kunci sesi dibungkus RSA, lalu data dienkripsi AEAD (AES-GCM/ChaCha20)."
                         ><i data-lucide="info" class="info-icon" aria-label="Struktur envelope KRPH"></i
                     ></span>
                     <textarea
@@ -116,9 +131,9 @@
                     ></textarea>
                 </label>
                 <div id="h-envelope-meta" class="envelope-meta" hidden>
-                    <span>📏 Ukuran Ciphertext: <b id="h-meta-ct">–</b> bytes</span>
-                    <span>🔑 Wrapped Key Size: <b id="h-meta-wk">–</b> bytes (RSA-2048)</span>
-                    <span>⏱️ Waktu Enkripsi: <b id="h-meta-ms">–</b> ms</span>
+                    <span>Ukuran Ciphertext: <b id="h-meta-ct">–</b> bytes</span>
+                    <span>Wrapped Key Size: <b id="h-meta-wk">–</b> bytes (RSA-2048)</span>
+                    <span>Waktu Enkripsi: <b id="h-meta-ms">–</b> ms</span>
                     <span
                         class="label-inline"
                         data-tippy-content="Envelope berisi kunci sesi yang dibungkus RSA + data terenkripsi AES"
